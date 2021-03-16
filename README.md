@@ -1,4 +1,4 @@
-# Wasp
+# Wasp 🐝
 
 A little dialect of Lisp I'm building to learn about compilers.
 
