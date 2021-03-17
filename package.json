@@ -1,0 +1,21 @@
+{
+  "name": "wasp",
+  "version": "1.0.0",
+  "description": "A little dialect of Lisp I'm building to learn about compilers.",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mubaraqwahab/wasp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mubaraqwahab/wasp/issues"
+  },
+  "homepage": "https://github.com/mubaraqwahab/wasp#readme"
+}

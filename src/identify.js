@@ -9,17 +9,17 @@ const isWhitespace = (char) => WHITESPACE.test(char);
 const isOpeningParenthesis = (char) => char === "(";
 const isClosingParenthesis = (char) => char === ")";
 const isParenthesis = (char) =>
-  isOpeningParenthesis(char) || isClosingParenthesis(char);
+	isOpeningParenthesis(char) || isClosingParenthesis(char);
 const isQuote = (char) => char === '"'; // || char === "'"
 const isOperator = (char) => OPERATORS.includes(char);
 
-export {
-  isLetter,
-  isNumber,
-  isWhitespace,
-  isOpeningParenthesis,
-  isClosingParenthesis,
-  isParenthesis,
-  isQuote,
-  isOperator,
+module.exports = {
+	isLetter,
+	isNumber,
+	isWhitespace,
+	isOpeningParenthesis,
+	isClosingParenthesis,
+	isParenthesis,
+	isQuote,
+	isOperator,
 };
