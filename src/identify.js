@@ -3,15 +3,22 @@ const NUMBER = /^[0-9]+$/;
 const WHITESPACE = /\s+/;
 const OPERATORS = ["+", "-", "*", "/", "%"];
 
-const isLetter = (char) => LETTER.test(char);
-const isNumber = (char) => NUMBER.test(char);
-const isWhitespace = (char) => WHITESPACE.test(char);
-const isOpeningParenthesis = (char) => char === "(";
-const isClosingParenthesis = (char) => char === ")";
-const isParenthesis = (char) =>
-	isOpeningParenthesis(char) || isClosingParenthesis(char);
-const isQuote = (char) => char === '"'; // || char === "'"
-const isOperator = (char) => OPERATORS.includes(char);
+const isLetter = (character) => LETTER.test(character);
+
+const isNumber = (character) => NUMBER.test(character);
+
+const isWhitespace = (character) => WHITESPACE.test(character);
+
+const isOpeningParenthesis = (character) => character === "(";
+
+const isClosingParenthesis = (character) => character === ")";
+
+const isParenthesis = (character) =>
+	isOpeningParenthesis(character) || isClosingParenthesis(character);
+
+const isQuote = (character) => character === '"';
+
+const isOperator = (character) => OPERATORS.includes(character);
 
 module.exports = {
 	isLetter,
