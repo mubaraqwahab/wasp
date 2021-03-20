@@ -3,6 +3,9 @@
 ;
 ; Play with the grammar (in EBNF) at
 ; https://bnfplayground.pauliankline.com/
+;
+; See https://www.eso.org/~ndelmott/ascii.html
+; for a list of ASCII character codes.
 
 ; TODO: validate grammar!
 ; see also http://www.quut.com/abnfgen/
@@ -34,7 +37,7 @@ unsigned-number =  int ( exponent / decimal-point *digit [ exponent ] )
 unsigned-number =/ decimal-point int [ exponent ]
 
 int = 1*digit
-deciman-point = "."
+decimal-point = %x2E
 exponent = "e" [ sign ] int
 sign = "+" / "-"
 
