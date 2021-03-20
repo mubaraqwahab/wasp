@@ -9,6 +9,8 @@
 ;
 ; Inspiration for this file: https://github.com/toml-lang/toml/blob/9e833b04a9872d88135ad51fcb4806bdb1c32a4c/toml.abnf
 
+; TODO: comments
+
 program = ws 1*( s-expression ws )
 
 s-expression = atom / list
