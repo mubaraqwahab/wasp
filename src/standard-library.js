@@ -1,19 +1,14 @@
 const all = (fn) => (...list) => list.reduce(fn);
 
-const add = all((a, b) => a + b);
-const subtract = all((a, b) => a - b);
-const multiply = all((a, b) => a * b);
-const divide = all((a, b) => a / b);
-const modulo = all((a, b) => a % b);
-const log = console.log;
-
 const environment = {
-	add,
-	subtract,
-	multiply,
-	divide,
-	modulo,
-	log,
+	add: all((a, b) => a + b),
+	subtract: all((a, b) => a - b),
+	multiply: all((a, b) => a * b),
+	divide: all((a, b) => a / b),
+	modulo: all((a, b) => a % b),
+	log: console.log,
+	max: Math.max,
+	min: Math.min,
 	pi: Math.PI,
 };
 

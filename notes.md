@@ -4,6 +4,7 @@ Compilation comprises three main stages: parsing, transformation, and generation
 
 - [Lexing](#lexing)
 - [Parsing](#parsing)
+- [Semantics](#semantics)
 
 ## Lexing
 
@@ -28,3 +29,7 @@ Here's a simple procedure for building an AST:
 1. Iterate over the array of tokens.
 2. Add each number, string, etc. to the current level of the tree.
 3. Collect the arguments of each _call expression_ (i.e. function call) and then recurse down into the function body.
+
+## Semantics
+
+It is important when designing a programming language to specify what each syntactic structure inherently "means". This is especially true for operators. These operators, and other built-in functions, objects, etc., that make up the language and its _standard library_ can be implemented in the target language of the compiler. (Higher-level functionality may be implemented using the language itself, though.)

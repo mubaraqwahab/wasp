@@ -22,6 +22,7 @@ function parenthesize(tokens) {
 	return token;
 }
 
+/** Construct an abstract syntax tree from an array of tokens. */
 function parse(tokens) {
 	if (Array.isArray(tokens)) {
 		const [first, ...rest] = tokens;
@@ -52,4 +53,6 @@ function parse(tokens) {
 	}
 }
 
-module.exports = { parse: (tokens) => parse(parenthesize(tokens)) };
+module.exports = {
+	parse: (tokens) => parse(parenthesize(tokens)),
+};
