@@ -1,37 +1,56 @@
-; Play with grammar at
+; This grammar is written in the notation of the Augmented Backus-Naur Form (ABNF)
+; as defined in RFC 5234: https://tools.ietf.org/html/rfc5234
+;
+; Play with the grammar (in EBNF) at
 ; https://bnfplayground.pauliankline.com/
-; TODO: validate!
 
-program = *s-expression
+; TODO: validate grammar!
+; see also http://www.quut.com/abnfgen/
+
+program = ws 1*( s-expression ws )
 
 s-expression = atom / list
 
 atom = number / symbol
 
-list = "nil" / "(" *[atom / list] ")"
+list = "nil" / open-bracket ws *( ( atom / list ) ws ) close-bracket
 
-number = [sign] unsigned-number
+open-bracket = "("
+close-bracket = ")"
 
-; 1, .2, 3., 45.6, 78e9, 1.2e-34
-unsigned-number =
-  1*digit ["." *digit] ["e" [sign] 1*digit]
-  / "." 1*digit ["e" [sign] 1*digit]
+; Whitespace
 
-symbol = ["'"] 1*character
+ws = *wschar
+wschar = %x20     ; space
+wschar =/ %x09    ; horizontal tab
+wschar =/ %x0A    ; line feed
+wschar =/ %x0D.0A ; crlf
 
-character = digit / letter / punctuation
+; Number e.g. 1, -.0, 3., 45.6, -78e9, 1.2e-34
 
+number = [ sign ] unsigned-number
+
+unsigned-number =  int ( exponent / decimal-point *digit [ exponent ] )
+unsigned-number =/ decimal-point int [ exponent ]
+
+int = 1*digit
+deciman-point = "."
+exponent = "e" [ sign ] int
 sign = "+" / "-"
 
-digit = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+; Symbol
+; * case insensitive
+; * parentheses, quotes, semicolon? aren't allowed
 
-; case insensitive
-letter =
-  "a" / "b" / "c" / "d" / "e" / "f" / "g" / "h" / "i" / "j" / "k" / "l" / "m"
-  / "n" / "o" / "p" / "q" / "r" / "s" / "t" / "u" / "v" / "w" / "x" / "y" / "z"
+symbol = [ single-quote ] 1*symbol-char
 
-; parentheses, quotes, semicolon? aren't allowed in symbols
-punctuation =
+single-quote = %x27
+symbol-char = digit / letter / symbol-punct
+
+digit = %x30-39 ; 0-9
+letter = %x41-5A / %x61-7A ; A-Z / a-z
+
+symbol-punct =
   "`" / "~" / "!" / "@" / "#" / "$" / "%" / "^" / "&" / "*"
   / "-" / "_" / "=" / "+" / "[" / "{" / "]" / "}" / "\" / "|"
   / ";" / ":" / "," / "<" / "." / ">" / "/" / "?"
