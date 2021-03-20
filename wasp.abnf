@@ -1,0 +1,37 @@
+; Play with grammar at
+; https://bnfplayground.pauliankline.com/
+; TODO: validate!
+
+program = *s-expression
+
+s-expression = atom / list
+
+atom = number / symbol
+
+list = "nil" / "(" *[atom / list] ")"
+
+number = [sign] unsigned-number
+
+; 1, .2, 3., 45.6, 78e9, 1.2e-34
+unsigned-number =
+  1*digit ["." *digit] ["e" [sign] 1*digit]
+  / "." 1*digit ["e" [sign] 1*digit]
+
+symbol = ["'"] 1*character
+
+character = digit / letter / punctuation
+
+sign = "+" / "-"
+
+digit = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+
+; case insensitive
+letter =
+  "a" / "b" / "c" / "d" / "e" / "f" / "g" / "h" / "i" / "j" / "k" / "l" / "m"
+  / "n" / "o" / "p" / "q" / "r" / "s" / "t" / "u" / "v" / "w" / "x" / "y" / "z"
+
+; parentheses, quotes, semicolon? aren't allowed in symbols
+punctuation =
+  "`" / "~" / "!" / "@" / "#" / "$" / "%" / "^" / "&" / "*"
+  / "-" / "_" / "=" / "+" / "[" / "{" / "]" / "}" / "\" / "|"
+  / ";" / ":" / "," / "<" / "." / ">" / "/" / "?"
