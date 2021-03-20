@@ -6,9 +6,8 @@
 ;
 ; See https://www.eso.org/~ndelmott/ascii.html
 ; for a list of ASCII character codes.
-
-; TODO: validate grammar!
-; see also http://www.quut.com/abnfgen/
+;
+; Inspiration for this file: https://github.com/toml-lang/toml/blob/9e833b04a9872d88135ad51fcb4806bdb1c32a4c/toml.abnf
 
 program = ws 1*( s-expression ws )
 
