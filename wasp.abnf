@@ -9,30 +9,35 @@
 ;
 ; Inspiration for this file: https://github.com/toml-lang/toml/blob/9e833b04a9872d88135ad51fcb4806bdb1c32a4c/toml.abnf
 
-; TODO: comments
-
-program = ws 1*( s-expression ws )
+program = [ ws-comment-nl ] 1*( s-expression [ ws-comment-nl ] )
 
 s-expression = atom / list
 
-atom = number / symbol
+atom = number / symbol / string
 
-list = "nil" / open-bracket ws *( ( atom / list ) ws ) close-bracket
+list = "nil"
+list =/ [ single-quote ] open-bracket [ ws-comment-nl ] list-elements close-bracket
 
+list-elements = *1( atom / list )
+list-elements =/ ( atom / list ) ws-comment-nl list-elements
+
+single-quote = %x27
 open-bracket = "("
 close-bracket = ")"
 
 ; Whitespace
 
-ws = *wschar
-wschar = %x20     ; space
-wschar =/ %x09    ; horizontal tab
-wschar =/ %x0A    ; line feed
-wschar =/ %x0D.0A ; crlf
+ws = 1*wschar
+wschar = space / htab / newline
+space = %x20
+htab = %x09
+newline = %x0A / %x0D.0A ; lf / crlf
 
-; Number e.g. 1, -.0, 3., 45.6, -78e9, 1.2e-34
+ws-comment-nl = ws / 1*( [ comment ] newline )
 
-number = [ sign ] unsigned-number
+; Number e.g. 1, -.0, 3., '45.6, -78e9, 1.2e-34
+
+number = [ single-quote ] [ sign ] unsigned-number
 
 unsigned-number =  int ( exponent / decimal-point *digit [ exponent ] )
 unsigned-number =/ decimal-point int [ exponent ]
@@ -44,12 +49,12 @@ sign = "+" / "-"
 
 ; Symbol
 ; * case insensitive
-; * parentheses, quotes, semicolon? aren't allowed
+; * parentheses, quotes, semicolon aren't allowed
+; * can't be all numbers
 
-symbol = [ single-quote ] 1*symbol-char
+symbol = [ single-quote ] 1*( [ digit ] symbol-char [ digit ] )
 
-single-quote = %x27
-symbol-char = digit / letter / symbol-punct
+symbol-char = letter / symbol-punct
 
 digit = %x30-39 ; 0-9
 letter = %x41-5A / %x61-7A ; A-Z / a-z
@@ -58,3 +63,30 @@ symbol-punct =
   "`" / "~" / "!" / "@" / "#" / "$" / "%" / "^" / "&" / "*"
   / "-" / "_" / "=" / "+" / "[" / "{" / "]" / "}" / "\" / "|"
   / ";" / ":" / "," / "<" / "." / ">" / "/" / "?"
+
+; String: anything enclosed in double quotes
+; Largely from the TOML grammar
+
+string = double-quote *string-char double-quote
+
+double-quote = %x22
+string-char = unescaped / escaped
+unescaped = wschar / %x21 / %x23-5B / %x5D-7E / non-ascii ; basically, everything except " and \
+escaped = escape escape-seq-char
+non-ascii = %x80-D7FF / %xE000-10FFFF
+
+escape = %x5C           ; \
+escape-seq-char =  %x22 ; "    quotation mark  U+0022
+escape-seq-char =/ %x5C ; \    reverse solidus U+005C
+escape-seq-char =/ %x62 ; b    backspace       U+0008
+escape-seq-char =/ %x66 ; f    form feed       U+000C
+escape-seq-char =/ %x6E ; n    line feed       U+000A
+escape-seq-char =/ %x72 ; r    carriage return U+000D
+escape-seq-char =/ %x74 ; t    tab             U+0009
+
+; Comment starts with semicolon
+
+comment = semicolon *non-eol
+
+semicolon = %x3B
+non-eol = %x09 / %x20-7F / non-ascii
