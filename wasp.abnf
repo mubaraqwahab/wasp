@@ -47,12 +47,12 @@ decimal-point = %x2E
 exponent = "e" [ sign ] int
 sign = "+" / "-"
 
-; Symbol
+; Symbols (and identifiers)
 ; * case insensitive
 ; * parentheses, quotes, semicolon aren't allowed
-; * can't be all numbers
+; * can't be all numbers, can't start with number
 
-symbol = [ single-quote ] 1*( [ digit ] symbol-char [ digit ] )
+symbol = [ single-quote ] 1*( symbol-char [ digit ] )
 
 symbol-char = letter / symbol-punct
 
