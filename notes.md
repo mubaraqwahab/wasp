@@ -25,7 +25,7 @@ The second phase of parsing is syntactic analysis (or syntax analysis). It may s
 
 > **Tips:**
 > * [AST Explorer](https://astexplorer.net/) is one tool for inspecting ASTs.
-> * There are AST specifications for languages relating to the web @syntax-tree
+> * There are AST specifications for languages relating to the web [@syntax-tree](https://github.com/syntax-tree). There are other specs as well, like [ESTree](https://github.com/estree/estree) for JavaScript.
 
 Here's a simple procedure for building an AST:
 
@@ -41,6 +41,6 @@ It is important when designing a programming language to specify what each synta
 
 ## Code Generation
 
-The _back-end_ phases of compilation are mostly involved with optimizing the representation and generating code in the target language. Think of the latter as the "reverse" of parsing &ndash; transforming an AST into code.
+The _back-end_ phases of compilation are mostly concerned with optimizing the representation and generating code in the target language. Think of the latter as the "reverse" of parsing &ndash; transforming an AST into code.
 
 There are many options for a target language. It could be a very low-level language like assembly, or some other intermediate representation for which some code generator already exists (like LLVM), or even another high-level language. Compiling to a similarly high-level language is called _transpiling_, and this is what many web build tools do &ndash; transpiling a language like TypeScript (or a language extension like JSX) to JavaScript.
