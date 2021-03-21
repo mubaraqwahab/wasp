@@ -6,6 +6,7 @@ Compilation comprises three main stages: parsing, transformation, and generation
 - [Parsing](#parsing)
 - [Semantics](#semantics)
 - [Code Generation](#code-generation)
+  - [Visitor Pattern](#visitor-pattern)
 
 ## Lexing
 
@@ -44,3 +45,7 @@ It is important when designing a programming language to specify what each synta
 The _back-end_ phases of compilation are mostly concerned with optimizing the representation and generating code in the target language. Think of the latter as the "reverse" of parsing &ndash; transforming an AST into code.
 
 There are many options for a target language. It could be a very low-level language like assembly, or some other intermediate representation for which some code generator already exists (like LLVM), or even another high-level language. Compiling to a similarly high-level language is called _transpiling_, and this is what many web build tools do &ndash; transpiling a language like TypeScript (or a language extension like JSX) to JavaScript.
+
+### Visitor Pattern
+
+Do a depth-first search of the AST and perform a certain action depending on the type of node visited.
