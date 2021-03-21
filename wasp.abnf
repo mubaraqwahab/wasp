@@ -9,17 +9,16 @@
 ;
 ; Inspiration for this file: https://github.com/toml-lang/toml/blob/9e833b04a9872d88135ad51fcb4806bdb1c32a4c/toml.abnf
 
-program = [ ws-comment-nl ] 1*( s-expression [ ws-comment-nl ] )
+; Overall program structure
 
-s-expression = atom / list
+program = [ ws-comment-nl ] s-expressions [ ws-comment-nl ]
+
+; An s-expr must be separated from other exprs by a ws or comment
+s-expressions = ( atom / list ) [ ws-comment-nl s-expressions ]
 
 atom = number / symbol / string
 
-list = "nil"
-list =/ [ single-quote ] open-bracket [ ws-comment-nl ] list-elements close-bracket
-
-list-elements = *1( atom / list )
-list-elements =/ ( atom / list ) ws-comment-nl list-elements
+list = "nil" / [ single-quote ] open-bracket [ program ] close-bracket
 
 single-quote = %x27
 open-bracket = "("
