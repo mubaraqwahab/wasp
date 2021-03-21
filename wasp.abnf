@@ -18,7 +18,7 @@ s-expressions = ( atom / list ) [ ws-comment-nl s-expressions ]
 
 atom = number / symbol / string
 
-list = "nil" / [ single-quote ] open-bracket [ program ] close-bracket
+list = [ single-quote ] open-bracket [ program ] close-bracket
 
 single-quote = %x27
 open-bracket = "("

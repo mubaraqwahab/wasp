@@ -1,0 +1,13 @@
+(+ 1 2)
+(- 1 2)
+(* 1 2)
+(/ 1 2)
+(** 1 2)
+(let
+    ((nums (list 1 2 3))
+    (a (first nums))
+    (others (rest nums)))
+  (print (cons a others))
+)
+(last '(1 2 3))
+
