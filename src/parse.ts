@@ -1,4 +1,4 @@
-import { Node, Token } from "./types.ts";
+import { Token } from "./types.ts";
 
 function parse(tokens: Token[]) {}
 

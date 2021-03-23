@@ -29,6 +29,6 @@ interface Point {
 }
 
 interface Node {
-  // type: string;
-  // position: Position;
+  type: string;
+  position: Position;
 }
