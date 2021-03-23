@@ -1,0 +1,4 @@
+(* (+ 2 4) 3)
+(defun factorial (n)
+  "Compute the factorial of a given integer n"
+  (* n (factorial (- n 1))))

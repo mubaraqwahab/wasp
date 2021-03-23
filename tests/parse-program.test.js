@@ -1,40 +1,36 @@
-const { parseProgram } = require("../src/parse-program");
+Deno.test("should return a program node", () => {
+  const tokens = [
+    { type: "Parenthesis", value: "(" },
+    { type: "Name", value: "define" },
+    { type: "Name", value: "x" },
+    { type: "Number", value: 7 },
+    { type: "Parenthesis", value: ")" },
+    { type: "Parenthesis", value: "(" },
+    { type: "Name", value: "add" },
+    { type: "Name", value: "x" },
+    { type: "Name", value: "x" },
+    { type: "Parenthesis", value: ")" },
+  ];
 
-describe(parseProgram, () => {
-  it.skip("should return a program node", () => {
-    const tokens = [
-      { type: "Parenthesis", value: "(" },
-      { type: "Name", value: "define" },
-      { type: "Name", value: "x" },
-      { type: "Number", value: 7 },
-      { type: "Parenthesis", value: ")" },
-      { type: "Parenthesis", value: "(" },
-      { type: "Name", value: "add" },
-      { type: "Name", value: "x" },
-      { type: "Name", value: "x" },
-      { type: "Parenthesis", value: ")" },
-    ];
+  // expect(parseProgram(tokens).type).toBe("Program");
+});
 
-    expect(parseProgram(tokens).type).toBe("Program");
-  });
+Deno.test("should have an array of expressions", () => {
+  const tokens = [
+    { type: "Parenthesis", value: "(" },
+    { type: "Name", value: "define" },
+    { type: "Name", value: "x" },
+    { type: "Number", value: 7 },
+    { type: "Parenthesis", value: ")" },
+    { type: "Parenthesis", value: "(" },
+    { type: "Name", value: "add" },
+    { type: "Name", value: "x" },
+    { type: "Name", value: "x" },
+    { type: "Parenthesis", value: ")" },
+  ];
 
-  it.skip("should have an array of expressions", () => {
-    const tokens = [
-      { type: "Parenthesis", value: "(" },
-      { type: "Name", value: "define" },
-      { type: "Name", value: "x" },
-      { type: "Number", value: 7 },
-      { type: "Parenthesis", value: ")" },
-      { type: "Parenthesis", value: "(" },
-      { type: "Name", value: "add" },
-      { type: "Name", value: "x" },
-      { type: "Name", value: "x" },
-      { type: "Parenthesis", value: ")" },
-    ];
+  // const program = parseProgram(tokens);
 
-    const program = parseProgram(tokens);
-
-    expect(Array.isArray(program.body)).toBe(true);
-    expect(program.body.length).toBe(2);
-  });
+  // expect(Array.isArray(program.body)).toBe(true);
+  // expect(program.body.length).toBe(2);
 });
