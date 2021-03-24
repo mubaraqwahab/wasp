@@ -9,24 +9,37 @@ Deno.test("should return an array", () => {
   assertEquals(lex(""), []);
 });
 
-Deno.test("can tokenize a pair of parentheses", () => {
-  const input = "()";
-  const result = [
-    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
-    { type: TokenType.CLOSING_PARENTHESIS },
-  ];
+// NUMBERS
 
+// SYMBOLS
+
+Deno.test("should tokenize a symbol", () => {
+  const input = `+a1 `;
+  const result = [{ type: TokenType.SYMBOL, value: "+a1", quoted: false }];
   assertEquals(lex(input), result);
 });
 
-Deno.test("can tokenize a string", () => {
+Deno.test("should tokenize a quoted symbol", () => {
+  const input = `'ab-c`;
+  const result = [{ type: TokenType.SYMBOL, value: "ab-c", quoted: true }];
+  assertEquals(lex(input), result);
+});
+
+// STRINGS
+
+Deno.test("should tokenize a string", () => {
   const input = `"Hello"`;
   const result = [{ type: TokenType.STRING, value: "Hello" }];
-
   assertEquals(lex(input), result);
 });
 
-// Deno.test("can tokenize an escaped string", () => {
+Deno.test("should tokenize a quoted string", () => {
+  const input = `'"Hi there"`;
+  const result = [{ type: TokenType.STRING, value: "Hi there" }];
+  assertEquals(lex(input), result);
+});
+
+// Deno.test("should tokenize an escaped string", () => {
 //   const input = `"Hel\\"lo"`;
 //   const result = [
 //     { type: TokenType.STRING, value: `Hel\\"lo`, quoted: false },
@@ -35,28 +48,29 @@ Deno.test("can tokenize a string", () => {
 //   assertEquals(lex(input), result);
 // });
 
-Deno.test("can tokenize a symbol", () => {
-  const input = `+a1 `;
-  const result = [{ type: TokenType.SYMBOL, value: "+a1", quoted: false }];
+// LISTS
 
+Deno.test("should tokenize a list of symbols", () => {
+  const input = "(+ a b)";
+  const result = [
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "+", quoted: false },
+    { type: TokenType.SYMBOL, value: "a", quoted: false },
+    { type: TokenType.SYMBOL, value: "b", quoted: false },
+    { type: TokenType.CLOSING_PARENTHESIS },
+  ];
   assertEquals(lex(input), result);
 });
 
-Deno.test("can tokenize a quoted atom", () => {
-  const input1 = `'abc`;
-  const input2 = `'"Hi there"`;
-
-  const result1 = [{ type: TokenType.SYMBOL, value: "abc", quoted: true }];
-  const result2 = [{ type: TokenType.STRING, value: "Hi there" }];
-
-  assertEquals(lex(input1), result1);
-  assertEquals(lex(input2), result2);
-});
-
-Deno.test("should ignore whitespace completely", () => {
-  const input = "                  ";
-  const result = [];
-
+Deno.test("should tokenize a quoted list", () => {
+  const input = "'(+ a b)";
+  const result = [
+    { type: TokenType.OPENING_PARENTHESIS, quoted: true },
+    { type: TokenType.SYMBOL, value: "+", quoted: false },
+    { type: TokenType.SYMBOL, value: "a", quoted: false },
+    { type: TokenType.SYMBOL, value: "b", quoted: false },
+    { type: TokenType.CLOSING_PARENTHESIS },
+  ];
   assertEquals(lex(input), result);
 });
 
@@ -65,7 +79,23 @@ Deno.test("should fail to tokenize quoted closing paren", () => {
   assertThrows(() => lex(input), SyntaxError, "quote");
 });
 
-Deno.test("should fail to tokenize unrecognized chars", () => {
+// WHITESPACE
+
+Deno.test("should ignore whitespace completely", () => {
+  const input = `
+  \t`;
+  const result = [];
+  assertEquals(lex(input), result);
+});
+
+Deno.test("should fail to tokenize quoted whitespace", () => {
+  const input = "a ' ";
+  assertThrows(() => lex(input), SyntaxError, "quote");
+});
+
+// UNRECOGNIZED
+
+Deno.test("should fail to tokenize unrecognized char", () => {
   const input = "ab 😀";
   assertThrows(() => lex(input), SyntaxError, "unrecognized");
 });
