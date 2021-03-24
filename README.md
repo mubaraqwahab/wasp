@@ -1,6 +1,6 @@
 # Wasp 🐝
 
-A little dialect of Lisp for my learning about compilers, built with [TypeScript](https://www.typescriptlang.org/) and [Deno](https://deno.land/).
+A little dialect of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)) for my learning about compilers, built with [TypeScript](https://www.typescriptlang.org/) and [Deno](https://deno.land/).
 
 This is based on a [Frontend Masters](https://frontendmasters.com/) course, [_Building Your Own Programming Language_](https://frontendmasters.com/courses/programming-language). (See [course repo](https://github.com/stevekinney/dropbear).)
 
@@ -24,3 +24,15 @@ The course used Lisp because it has a very simple syntax, unlike most other lang
 * I've specified Wasp syntax is in [/wasp.abnf](./wasp.abnf) in [ABNF](https://tools.ietf.org/html/rfc5234) notation.
 * Lexing in progress.
 * Semantics and special forms are yet to be defined.
+
+## Setup
+
+To use Wasp, you need to install [Deno](https://deno.land/). Deno is a JavaScript runtime from the creator of [Node](https://nodejs.org/). It's designed to be more standards-compliant, and it supports TypeScript out-of-the-box.
+
+TODO: How to run
+
+TODO: How to compile
+
+## Directory structure
+
+TODO
