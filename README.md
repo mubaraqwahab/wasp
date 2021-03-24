@@ -1,6 +1,6 @@
 # Wasp 🐝
 
-A little dialect of Lisp for my learning about compilers, built with TypeScript and Deno.
+A little dialect of Lisp for my learning about compilers, built with [TypeScript](https://www.typescriptlang.org/) and [Deno](https://deno.land/).
 
 This is based on a [Frontend Masters](https://frontendmasters.com/) course, [_Building Your Own Programming Language_](https://frontendmasters.com/courses/programming-language). (See [course repo](https://github.com/stevekinney/dropbear).)
 
@@ -14,7 +14,9 @@ There's also a significant difference between the code developers write (_develo
 
 ## Why Lisp?
 
-The course used Lisp because it has a very simple syntax, unlike most other languages; in Lisp, everything is either an atom or a list.
+The course used Lisp because it has a very simple syntax, unlike most other languages:
+* Everything in Lisp is either an atom or a list;
+* Also, Lisp uses prefix notation so there's nothing to worry about operator precedence.
 
 ## Progress
 
