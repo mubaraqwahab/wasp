@@ -12,7 +12,7 @@ enum TokenType {
 
 interface Token {
   type: TokenType;
-  value?: number | symbol | string;
+  value?: number | string;
   quoted?: boolean;
   position?: Position;
 }
