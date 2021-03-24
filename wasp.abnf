@@ -1,0 +1,91 @@
+; This grammar is written in the notation of the Augmented Backus-Naur Form (ABNF)
+; as defined in RFC 5234: https://tools.ietf.org/html/rfc5234
+;
+; Play with the grammar (in EBNF) at
+; https://bnfplayground.pauliankline.com/?bnf=%0A%3Cprogram%3E%20%3A%3A%3D%20%3Cws%3E%20(%20%3Cs_expression%3E%20%3Cws%3E%20)%2B%0A%3Cs_expression%3E%20%3A%3A%3D%20%3Catom%3E%20%7C%20%3Clist%3E%0A%3Catom%3E%20%3A%3A%3D%20%3Cnumber%3E%20%7C%20%3Csymbol%3E%0A%3Clist%3E%20%3A%3A%3D%20%22nil%22%20%7C%20%3Copen_bracket%3E%20%3Cws%3E%20(%20(%20%3Catom%3E%20%7C%20%3Clist%3E%20)%20%3Cws%3E%20)*%20%3Cclose_bracket%3E%0A%3Copen_bracket%3E%20%3A%3A%3D%20%22(%22%0A%3Cclose_bracket%3E%20%3A%3A%3D%20%22)%22%0A%3Cws%3E%20%3A%3A%3D%20%3Cwschar%3E*%0A%3Cwschar%3E%20%3A%3A%3D%20%22%20%22%0A%09%7C%20%22%5Ct%22%0A%09%7C%20%22%5Cn%22%0A%09%7C%20%22%5Cr%5Cn%22%0A%3Cnumber%3E%20%3A%3A%3D%20(%20%3Csign%3E%20)%3F%20%3Cunsigned_number%3E%0A%3Cunsigned_number%3E%20%3A%3A%3D%20%20%3Cint%3E%20(%20%3Cexponent%3E%20%7C%20%3Cdecimal_point%3E%20%3Cdigit%3E*%20(%20%3Cexponent%3E%20)%3F%20)%0A%09%7C%20%3Cdecimal_point%3E%20%3Cint%3E%20(%20%3Cexponent%3E%20)%3F%0A%3Cint%3E%20%3A%3A%3D%20%3Cdigit%3E%2B%0A%3Cdecimal_point%3E%20%3A%3A%3D%20%22.%22%0A%3Cexponent%3E%20%3A%3A%3D%20%22e%22%20(%20%3Csign%3E%20)%3F%20%3Cint%3E%0A%3Csign%3E%20%3A%3A%3D%20%22%2B%22%20%7C%20%22-%22%0A%3Csymbol%3E%20%3A%3A%3D%20(%20%3Csingle_quote%3E%20)%3F%20%3Csymbol_char%3E%2B%0A%3Csingle_quote%3E%20%3A%3A%3D%20%22%27%22%0A%3Csymbol_char%3E%20%3A%3A%3D%20%3Cdigit%3E%20%7C%20%3Cletter%3E%20%7C%20%3Csymbol_punct%3E%0A%3Cdigit%3E%20%3A%3A%3D%20%5B0-9%5D%0A%3Cletter%3E%20%3A%3A%3D%20%5BA-Z%5D%20%7C%20%5Ba-z%5D%0A%3Csymbol_punct%3E%20%3A%3A%3D%0A%20%20%22%60%22%20%7C%20%22~%22%20%7C%20%22!%22%20%7C%20%22%40%22%20%7C%20%22%23%22%20%7C%20%22%24%22%20%7C%20%22%25%22%20%7C%20%22%5E%22%20%7C%20%22%26%22%20%7C%20%22*%22%0A%20%20%7C%20%22-%22%20%7C%20%22_%22%20%7C%20%22%3D%22%20%7C%20%22%2B%22%20%7C%20%22%5B%22%20%7C%20%22%7B%22%20%7C%20%22%5D%22%20%7C%20%22%7D%22%20%7C%20%22%5C%5C%22%20%7C%20%22%7C%22%0A%20%20%7C%20%22%3B%22%20%7C%20%22%3A%22%20%7C%20%22%2C%22%20%7C%20%22%3C%22%20%7C%20%22.%22%20%7C%20%22%3E%22%20%7C%20%22%2F%22%20%7C%20%22%3F%22%0A&name=
+;
+; See https://www.eso.org/~ndelmott/ascii.html
+; for a list of ASCII character codes.
+;
+; Inspiration for this file: https://github.com/toml-lang/toml/blob/9e833b04a9872d88135ad51fcb4806bdb1c32a4c/toml.abnf
+
+; Overall program structure
+
+program = [ ws-comment-nl ] s-expressions [ ws-comment-nl ]
+
+; An s-expr may be separated from other exprs by a ws or comment
+s-expressions = ( atom / list ) [ [ ws-comment-nl ] s-expressions ]
+
+atom = number / symbol / string
+
+list = [ single-quote ] open-bracket [ program ] close-bracket
+
+single-quote = %x27
+open-bracket = "("
+close-bracket = ")"
+
+; Whitespace
+
+ws = 1*wschar
+wschar = space / htab / newline
+space = %x20
+htab = %x09
+newline = %x0A / %x0D.0A ; lf / crlf
+
+ws-comment-nl = ws / 1*( [ comment ] newline )
+
+; Number e.g. 1, -.0, 3., '45.6, -78e9, 1.2e-34
+
+number = [ single-quote ] [ sign ] unsigned-number
+
+unsigned-number =  int ( exponent / decimal-point *digit [ exponent ] )
+unsigned-number =/ decimal-point int [ exponent ]
+
+int = 1*digit
+decimal-point = %x2E
+exponent = "e" [ sign ] int
+sign = "+" / "-"
+
+; Symbols (and identifiers)
+; * case insensitive
+; * parentheses, quotes, semicolon aren't allowed
+; * can't be all numbers, can't start with number
+
+symbol = [ single-quote ] 1*( symbol-char [ digit ] )
+
+symbol-char = letter / symbol-punct
+
+digit = %x30-39 ; 0-9
+letter = %x41-5A / %x61-7A ; A-Z / a-z
+
+symbol-punct =
+  "`" / "~" / "!" / "@" / "#" / "$" / "%" / "^" / "&" / "*"
+  / "-" / "_" / "=" / "+" / "[" / "{" / "]" / "}" / "\" / "|"
+  / ";" / ":" / "," / "<" / "." / ">" / "/" / "?"
+
+; String: anything enclosed in double quotes
+; Largely from the TOML grammar
+
+string = [ single-quote ] double-quote *string-char double-quote
+
+double-quote = %x22
+string-char = unescaped / escaped
+unescaped = wschar / %x21 / %x23-5B / %x5D-7E / non-ascii ; basically, everything except " and \
+escaped = escape escape-seq-char
+non-ascii = %x80-D7FF / %xE000-10FFFF
+
+escape = %x5C           ; \
+escape-seq-char =  %x22 ; "    quotation mark  U+0022
+escape-seq-char =/ %x5C ; \    reverse solidus U+005C
+escape-seq-char =/ %x62 ; b    backspace       U+0008
+escape-seq-char =/ %x66 ; f    form feed       U+000C
+escape-seq-char =/ %x6E ; n    line feed       U+000A
+escape-seq-char =/ %x72 ; r    carriage return U+000D
+escape-seq-char =/ %x74 ; t    tab             U+0009
+
+; Comment starts with semicolon
+
+comment = semicolon *non-eol
+
+semicolon = %x3B
+non-eol = %x09 / %x20-7F / non-ascii

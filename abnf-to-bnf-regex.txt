@@ -1,0 +1,80 @@
+# block comments
+find:
+^;.*
+replace:
+
+
+# inline comments
+find:
+[^"];.*
+replace:
+
+
+# production heads
+# program = ... => <program> ::= ...
+find:
+^([\w-]+) =/?(\s)
+replace:
+<$1> ::=$2
+
+# alternatives / => |
+find:
+(\s)/(\s)
+replace:
+$1|$2
+
+# optional [ ... ] => ( ... )?
+find:
+(\s)\[(\s*)(.+)(\s*)\]
+replace:
+$1($2$3$4)?
+
+# whitespace
+find:
+(\s*\n+)
+replace:
+\n
+
+# one or more
+# 1*digit => digit+
+find:
+1\*(\(.*\)|[\w-]+)
+replace:
+$1+
+
+# zero or more
+# *digit => digit*
+find:
+\*(\(.*\)|[\w-]+)
+replace:
+$1*
+
+# rhs non-terminals
+# ::= atom => ::= <atom>
+find:
+(?<=\s)([\w-]+)
+replace:
+<$1>
+
+# hyphens s-expr => s_expr
+find:
+(\w+)-(\w+)
+replace:
+$1_$2
+
+# No regex for what follows
+
+# encoded chars
+%x2E = "."
+%x27 = "'"
+%x20 = " "
+%x09 = "\t"
+%x0A = "\n"
+%x0D.0A = "\r\n"
+%x30_39 = [0-9]
+%x41_5A = [A-Z]
+%x61_7A = [a-z]
+
+# escape slash
+find: "\"
+replace: "\\"
