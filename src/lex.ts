@@ -13,10 +13,10 @@ function lex(src: string): Token[] {
   const tokens: Token[] = [];
 
   for (let cursor = 0; cursor < src.length;) {
-    // Literal
-    let literal = false;
+    // Quote
+    let quoted = false;
     if (src[cursor] === "'") {
-      literal = true;
+      quoted = true;
       cursor++;
     }
 
@@ -28,7 +28,7 @@ function lex(src: string): Token[] {
       while (isSymbolChar(src[++cursor]) || isDigit(src[cursor])) {
         value += src[cursor];
       }
-      tokens.push({ type: TokenType.SYMBOL, value, literal });
+      tokens.push({ type: TokenType.SYMBOL, value, quoted });
     } // String
     else if (src[cursor] === '"') {
       let value = "";
@@ -36,11 +36,20 @@ function lex(src: string): Token[] {
       while (src[++cursor] !== '"' || isEscape(src[cursor - 1])) {
         value += src[cursor];
       }
-      tokens.push({ type: TokenType.STRING, value, literal });
+      tokens.push({ type: TokenType.STRING, value, quoted });
       cursor++;
-    } // Paren
-    else if (src[cursor] === "(" || src[cursor] === ")") {
-      tokens.push({ type: TokenType.PARENTHESIS, value: src[cursor], literal });
+    } // Open Paren
+    else if (src[cursor] === "(") {
+      tokens.push({ type: TokenType.OPENING_PARENTHESIS, quoted });
+      cursor++;
+    } // Close Paren
+    else if (src[cursor] === ")") {
+      if (quoted) {
+        throw new SyntaxError(
+          `A quote "'" must not precede a closing parenthesis ")".`,
+        );
+      }
+      tokens.push({ type: TokenType.CLOSING_PARENTHESIS });
       cursor++;
     } // Comment
     else if (src[cursor] === ";") {

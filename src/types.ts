@@ -5,14 +5,15 @@ enum TokenType {
   NUMBER,
   SYMBOL,
   STRING,
-  PARENTHESIS,
+  OPENING_PARENTHESIS,
+  CLOSING_PARENTHESIS,
   COMMENT,
 }
 
 interface Token {
   type: TokenType;
-  value: number | symbol | string;
-  literal: boolean;
+  value?: number | symbol | string;
+  quoted?: boolean;
   position?: Position;
 }
 
