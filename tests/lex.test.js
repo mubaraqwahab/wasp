@@ -21,7 +21,7 @@ Deno.test("can tokenize a pair of parentheses", () => {
 
 Deno.test("can tokenize a string", () => {
   const input = `"Hello"`;
-  const result = [{ type: TokenType.STRING, value: "Hello", quoted: false }];
+  const result = [{ type: TokenType.STRING, value: "Hello" }];
 
   assertEquals(lex(input), result);
 });
@@ -47,11 +47,7 @@ Deno.test("can tokenize a quoted atom", () => {
   const input2 = `'"Hi there"`;
 
   const result1 = [{ type: TokenType.SYMBOL, value: "abc", quoted: true }];
-  const result2 = [{
-    type: TokenType.STRING,
-    value: "Hi there",
-    quoted: true,
-  }];
+  const result2 = [{ type: TokenType.STRING, value: "Hi there" }];
 
   assertEquals(lex(input1), result1);
   assertEquals(lex(input2), result2);
@@ -67,6 +63,11 @@ Deno.test("should ignore whitespace completely", () => {
 Deno.test("should fail to tokenize quoted closing paren", () => {
   const input = "(+ a b ')";
   assertThrows(() => lex(input), SyntaxError, "quote");
+});
+
+Deno.test("should fail to tokenize unrecognized chars", () => {
+  const input = "ab 😀";
+  assertThrows(() => lex(input), SyntaxError, "unrecognized");
 });
 
 // // Exercise 1 - Begin

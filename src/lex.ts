@@ -1,5 +1,6 @@
 import { Token, TokenType } from "./types.ts";
 
+const isSign = (c: string) => c === "+" || c === "-";
 const isDigit = (c: string) => /^[0-9]$/.test(c);
 const isLetter = (c: string) => /^[a-z]$/.test(c);
 const isEscape = (c: string) => c === "\\";
@@ -8,6 +9,14 @@ const isSymbolChar = (c: string) => {
 };
 const isEOL = (c: string) => /^[\r\n]$/.test(c);
 const isWhitespace = (c: string) => /^\s$/.test(c);
+
+const s = JSON.stringify;
+const quoteError = (c: string) => {
+  return new SyntaxError(
+    `found ${s(c)} after quote "'". ` +
+      `A quote may only precede an atom or a list.`,
+  );
+};
 
 function lex(src: string): Token[] {
   const tokens: Token[] = [];
@@ -19,6 +28,10 @@ function lex(src: string): Token[] {
       quoted = true;
       cursor++;
     }
+    // Subtle note on the above:
+    // A quote is "meaningful" only when it precedes a symbol or an open paren
+    // A quoted string or number is equivalent to the corresponding unquoted string or number.
+    // A quote may not precede any other token besides the above (that is, including whitespace).
 
     // Number
 
@@ -36,7 +49,7 @@ function lex(src: string): Token[] {
       while (src[++cursor] !== '"' || isEscape(src[cursor - 1])) {
         value += src[cursor];
       }
-      tokens.push({ type: TokenType.STRING, value, quoted });
+      tokens.push({ type: TokenType.STRING, value });
       cursor++;
     } // Open Paren
     else if (src[cursor] === "(") {
@@ -44,19 +57,23 @@ function lex(src: string): Token[] {
       cursor++;
     } // Close Paren
     else if (src[cursor] === ")") {
-      if (quoted) {
-        throw new SyntaxError(
-          `A quote "'" must not precede a closing parenthesis ")".`,
-        );
-      }
+      if (quoted) throw quoteError(src[cursor]);
+
       tokens.push({ type: TokenType.CLOSING_PARENTHESIS });
       cursor++;
     } // Comment
     else if (src[cursor] === ";") {
+      if (quoted) throw quoteError(src[cursor]);
+
       while (isEOL(src[++cursor]));
     } // Whitespace
-    else {
+    else if (isWhitespace(src[cursor])) {
+      if (quoted) throw quoteError(src[cursor]);
+
       while (isWhitespace(src[++cursor]));
+    } // Unrecognized chars
+    else {
+      throw new SyntaxError(`unrecognized character ${s(src[cursor])}`);
     }
   }
 
