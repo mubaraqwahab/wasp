@@ -5,8 +5,8 @@ enum TokenType {
   NUMBER = "number",
   SYMBOL = "symbol",
   STRING = "string",
-  OPENING_PARENTHESIS = "openparenthesis",
-  CLOSING_PARENTHESIS = "closeparenthesis",
+  OPENING_PARENTHESIS = "openingparen",
+  CLOSING_PARENTHESIS = "closingparen",
   COMMENT = "comment",
 }
 
