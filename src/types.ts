@@ -1,5 +1,5 @@
 export type { Node, Token };
-export { TokenType };
+export { NodeType, TokenType };
 
 enum TokenType {
   NUMBER = "number",
@@ -14,22 +14,20 @@ interface Token {
   type: TokenType;
   value?: number | string;
   quoted?: boolean;
-  position?: Position;
 }
 
-interface Position {
-  start: Point;
-  end: Point;
-  indent?: number[];
-}
-
-interface Point {
-  line: number;
-  column: number;
-  offset?: number;
+enum NodeType {
+  NUMBER = "number",
+  SYMBOL = "symbol",
+  STRING = "string",
+  LIST = "list",
+  COMMENT = "comment",
+  PROGRAM = "program",
 }
 
 interface Node {
-  type: string;
-  position: Position;
+  type: NodeType;
+  value?: number | string;
+  quoted?: boolean;
+  children?: Node[];
 }
