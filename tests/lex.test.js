@@ -11,6 +11,12 @@ Deno.test("should return an array", () => {
 
 // NUMBERS
 
+Deno.test("should tokenize an unsigned int", () => {
+  const input = `123`;
+  const result = [{ type: TokenType.NUMBER, value: "123", quoted: false }];
+  // assertEquals(lex(input), result);
+});
+
 // SYMBOLS
 
 Deno.test("should tokenize a symbol", () => {
@@ -42,7 +48,7 @@ Deno.test("should tokenize a quoted string", () => {
 // Deno.test("should tokenize an escaped string", () => {
 //   const input = `"Hel\\"lo"`;
 //   const result = [
-//     { type: TokenType.STRING, value: `Hel\\"lo`, quoted: false },
+//     { type: TokenType.STRING, value: `Hel\\"lo` },
 //   ];
 
 //   assertEquals(lex(input), result);

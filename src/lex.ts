@@ -42,8 +42,11 @@ function lex(src: string): Token[] {
         value += src[cursor];
       }
       tokens.push({ type: TokenType.SYMBOL, value, quoted });
-    } // String
-    else if (src[cursor] === '"') {
+      continue;
+    }
+
+    // String
+    if (src[cursor] === '"') {
       let value = "";
       // Consume all chars until the next (unescaped) quote.
       while (src[++cursor] !== '"' || isEscape(src[cursor - 1])) {
@@ -51,30 +54,48 @@ function lex(src: string): Token[] {
       }
       tokens.push({ type: TokenType.STRING, value });
       cursor++;
-    } // Open Paren
-    else if (src[cursor] === "(") {
+      continue;
+    }
+
+    // Open Paren
+    if (src[cursor] === "(") {
       tokens.push({ type: TokenType.OPENING_PARENTHESIS, quoted });
       cursor++;
-    } // Close Paren
-    else if (src[cursor] === ")") {
+      continue;
+    }
+
+    // Close Paren
+    if (src[cursor] === ")") {
       if (quoted) throw quoteError(src[cursor]);
 
       tokens.push({ type: TokenType.CLOSING_PARENTHESIS });
       cursor++;
-    } // Comment
-    else if (src[cursor] === ";") {
+      continue;
+    }
+
+    // Comment
+    if (src[cursor] === ";") {
       if (quoted) throw quoteError(src[cursor]);
 
-      while (isEOL(src[++cursor]));
-    } // Whitespace
-    else if (isWhitespace(src[cursor])) {
+      let value = "";
+      while (!isEOL(src[++cursor])) {
+        value += src[cursor];
+      }
+      tokens.push({ type: TokenType.COMMENT, value });
+      cursor++;
+      continue;
+    }
+
+    // Whitespace
+    if (isWhitespace(src[cursor])) {
       if (quoted) throw quoteError(src[cursor]);
 
       while (isWhitespace(src[++cursor]));
-    } // Unrecognized chars
-    else {
-      throw new SyntaxError(`unrecognized character ${s(src[cursor])}`);
+      continue;
     }
+
+    // Unrecognized chars
+    throw new SyntaxError(`unrecognized character ${s(src[cursor])}`);
   }
 
   return tokens;
