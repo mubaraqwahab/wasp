@@ -89,14 +89,14 @@ Deno.test("should tokenize a quoted string", () => {
   assertEquals(lex(input), result);
 });
 
-// Deno.test("should tokenize an escaped string", () => {
-//   const input = `"Hel\\"lo"`;
-//   const result = [
-//     { type: TokenType.STRING, value: `Hel\\"lo` },
-//   ];
+Deno.test("should tokenize an escaped string", () => {
+  const input = `"Hel\\"lo\n"`;
+  const result = [
+    { type: TokenType.STRING, value: `Hel\\"lo\n` },
+  ];
 
-//   assertEquals(lex(input), result);
-// });
+  assertEquals(lex(input), result);
+});
 
 // LISTS
 
