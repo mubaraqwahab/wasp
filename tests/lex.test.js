@@ -41,10 +41,25 @@ Deno.test("should tokenize floats", () => {
   assertEquals(lex(input), result);
 });
 
-// Deno.test("should fail to tokenize a lone full-stop", () => {
-//   const input = `. +. -.`;
-//   assertThrows(() => lex(input), SyntaxError);
-// });
+Deno.test("shouldn't give false positives when tokenizing floats", () => {
+  const input = `4.5en 6e+-`;
+  const result = [
+    { type: TokenType.NUMBER, value: 4.5 },
+    { type: TokenType.SYMBOL, value: "en", quoted: false },
+    { type: TokenType.NUMBER, value: 6 },
+    { type: TokenType.SYMBOL, value: "e+-", quoted: false },
+  ];
+  assertEquals(lex(input), result);
+});
+
+Deno.test("should fail to tokenize a lone full-stop", () => {
+  const input1 = `.`;
+  const input2 = `+.`;
+  const input3 = `-.`;
+  assertThrows(() => lex(input1), SyntaxError, '"."');
+  assertThrows(() => lex(input2), SyntaxError, '"."');
+  assertThrows(() => lex(input3), SyntaxError, '"."');
+});
 
 // SYMBOLS
 

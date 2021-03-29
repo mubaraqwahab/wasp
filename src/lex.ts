@@ -43,7 +43,9 @@ function lex(src: string): Token[] {
     if (isDigit(src[cursor]) || src[cursor] === ".") {
       const startsWithDecimalPoint = src[cursor] === ".";
       if (startsWithDecimalPoint && !isDigit(src[cursor + 1])) {
-        throw new SyntaxError(`expected a digit but found {src[cursor]}`); // todo
+        throw new SyntaxError(
+          `expected a digit but found ${s(src[cursor])} after "."`,
+        ); // TODO: better error message
       }
 
       // Integer part (or fraction part, if number starts with a decimal point)
