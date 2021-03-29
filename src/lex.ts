@@ -33,7 +33,7 @@ function lex(src: string): Token[] {
     // A quoted string or number is equivalent to the corresponding unquoted string or number.
     // A quote may not precede any other token besides the above (that is, including whitespace).
 
-    // Number
+    // NUMBER
     let sign = "";
     if (isSign(src[cursor])) {
       sign = src[cursor];
@@ -91,7 +91,7 @@ function lex(src: string): Token[] {
       cursor--;
     }
 
-    // Symbol
+    // SYMBOL
     if (isSymbolChar(src[cursor])) {
       let value = src[cursor];
       while (isSymbolChar(src[++cursor]) || isDigit(src[cursor])) {
@@ -101,7 +101,7 @@ function lex(src: string): Token[] {
       continue;
     }
 
-    // String
+    // STRING
     if (src[cursor] === '"') {
       let value = "";
       // Consume all chars until the next (unescaped) quote.
@@ -113,14 +113,14 @@ function lex(src: string): Token[] {
       continue;
     }
 
-    // Open Paren
+    // OPEN PAREN
     if (src[cursor] === "(") {
       tokens.push({ type: TokenType.OPENING_PARENTHESIS, quoted });
       cursor++;
       continue;
     }
 
-    // Close Paren
+    // CLOSE PAREN
     if (src[cursor] === ")") {
       if (quoted) throw quoteError(src[cursor]);
 
@@ -129,7 +129,7 @@ function lex(src: string): Token[] {
       continue;
     }
 
-    // Comment
+    // COMMENT
     if (src[cursor] === ";") {
       if (quoted) throw quoteError(src[cursor]);
 
@@ -142,7 +142,7 @@ function lex(src: string): Token[] {
       continue;
     }
 
-    // Whitespace
+    // WHITESPACE
     if (isWhitespace(src[cursor])) {
       if (quoted) throw quoteError(src[cursor]);
 
@@ -150,7 +150,7 @@ function lex(src: string): Token[] {
       continue;
     }
 
-    // Unrecognized chars
+    // UNRECOGNIZED CHARS
     throw new SyntaxError(`unrecognized character ${s(src[cursor])}`);
   }
 
