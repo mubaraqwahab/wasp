@@ -2,12 +2,12 @@ export type { Node, Token };
 export { TokenType };
 
 enum TokenType {
-  NUMBER,
-  SYMBOL,
-  STRING,
-  OPENING_PARENTHESIS,
-  CLOSING_PARENTHESIS,
-  COMMENT,
+  NUMBER = "number",
+  SYMBOL = "symbol",
+  STRING = "string",
+  OPENING_PARENTHESIS = "openparenthesis",
+  CLOSING_PARENTHESIS = "closeparenthesis",
+  COMMENT = "comment",
 }
 
 interface Token {

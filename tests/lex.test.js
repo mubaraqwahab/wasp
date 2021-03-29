@@ -13,9 +13,51 @@ Deno.test("should return an array", () => {
 
 Deno.test("should tokenize an unsigned int", () => {
   const input = `123`;
-  const result = [{ type: TokenType.NUMBER, value: "123", quoted: false }];
-  // assertEquals(lex(input), result);
+  const result = [{ type: TokenType.NUMBER, value: 123 }];
+  assertEquals(lex(input), result);
 });
+
+Deno.test("should tokenize signed ints", () => {
+  const input = `+123 -456`;
+  const result = [
+    { type: TokenType.NUMBER, value: 123 },
+    { type: TokenType.NUMBER, value: -456 },
+  ];
+  assertEquals(lex(input), result);
+});
+
+Deno.test("should tokenize unsigned floats", () => {
+  const input = `.12 34. 5.6 .7e2 8.E3 90.1e+4 2.45E-67`;
+  const result = [
+    { type: TokenType.NUMBER, value: 0.12 },
+    { type: TokenType.NUMBER, value: 34.0 },
+    { type: TokenType.NUMBER, value: 5.6 },
+    { type: TokenType.NUMBER, value: 0.7e2 },
+    { type: TokenType.NUMBER, value: 8.e3 },
+    { type: TokenType.NUMBER, value: 90.1e4 },
+    { type: TokenType.NUMBER, value: 2.45e-67 },
+  ];
+  assertEquals(lex(input), result);
+});
+
+Deno.test("should tokenize signed floats", () => {
+  const input = `+.12 -34. +5.6 -.7e2 +8.E3 -90.1e+4 +2.45E-67`;
+  const result = [
+    { type: TokenType.NUMBER, value: 0.12 },
+    { type: TokenType.NUMBER, value: -34.0 },
+    { type: TokenType.NUMBER, value: 5.6 },
+    { type: TokenType.NUMBER, value: -0.7e2 },
+    { type: TokenType.NUMBER, value: 8.e3 },
+    { type: TokenType.NUMBER, value: -90.1e4 },
+    { type: TokenType.NUMBER, value: 2.45e-67 },
+  ];
+  assertEquals(lex(input), result);
+});
+
+// Deno.test("should fail to tokenize a lone full-stop", () => {
+//   const input = `. +. -.`;
+//   assertThrows(() => lex(input), SyntaxError);
+// });
 
 // SYMBOLS
 

@@ -5,7 +5,7 @@ const isDigit = (c: string) => /^[0-9]$/.test(c);
 const isLetter = (c: string) => /^[a-z]$/.test(c);
 const isEscape = (c: string) => c === "\\";
 const isSymbolChar = (c: string) => {
-  return isLetter(c) || /^[`~!@#$%^&*\-_=+[{\]}\\\|;:,<.>\/\?]$/.test(c);
+  return isLetter(c) || /^[`~!@#$%^&*\-_=+[{\]}\\\|;:,<>\/\?]$/.test(c);
 };
 const isEOL = (c: string) => /^[\r\n]$/.test(c);
 const isWhitespace = (c: string) => /^\s$/.test(c);
@@ -34,6 +34,23 @@ function lex(src: string): Token[] {
     // A quote may not precede any other token besides the above (that is, including whitespace).
 
     // Number
+    let sign = "";
+    if (isSign(src[cursor])) {
+      sign = src[cursor];
+      cursor++;
+    }
+
+    if (isDigit(src[cursor])) {
+      let value = sign + src[cursor];
+      while (isDigit(src[++cursor])) {
+        value += src[cursor];
+      }
+      tokens.push({ type: TokenType.NUMBER, value: +value });
+      continue;
+    } // A sign not succeeded by a digit is not a number.
+    else if (sign) {
+      cursor--;
+    }
 
     // Symbol
     if (isSymbolChar(src[cursor])) {
@@ -82,7 +99,7 @@ function lex(src: string): Token[] {
         value += src[cursor];
       }
       tokens.push({ type: TokenType.COMMENT, value });
-      cursor++;
+      cursor++; // not necessary tho
       continue;
     }
 
