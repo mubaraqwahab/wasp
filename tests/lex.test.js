@@ -27,13 +27,14 @@ Deno.test("should tokenize signed ints", () => {
 });
 
 Deno.test("should tokenize floats", () => {
-  const input = `.12 -34. +5.6 .7e2 -8.E3 +90.1e+4 2.45E-67`;
+  const input = `.12 -34. +5.6 .7e2 -8.E3 17e8 +90.1E+4 2.45e-67`;
   const result = [
     { type: TokenType.NUMBER, value: 0.12 },
     { type: TokenType.NUMBER, value: -34.0 },
     { type: TokenType.NUMBER, value: 5.6 },
     { type: TokenType.NUMBER, value: 0.7e2 },
     { type: TokenType.NUMBER, value: -8.e3 },
+    { type: TokenType.NUMBER, value: 17e8 },
     { type: TokenType.NUMBER, value: 90.1e4 },
     { type: TokenType.NUMBER, value: 2.45e-67 },
   ];

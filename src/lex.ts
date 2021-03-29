@@ -40,11 +40,48 @@ function lex(src: string): Token[] {
       cursor++;
     }
 
-    if (isDigit(src[cursor])) {
+    if (isDigit(src[cursor]) || src[cursor] === ".") {
+      const startsWithDecimalPoint = src[cursor] === ".";
+      if (startsWithDecimalPoint && !isDigit(src[cursor + 1])) {
+        throw new SyntaxError(`expected a digit but found {src[cursor]}`); // todo
+      }
+
+      // Integer part (or fraction part, if number starts with a decimal point)
       let value = sign + src[cursor];
       while (isDigit(src[++cursor])) {
         value += src[cursor];
       }
+
+      // Fraction part, if number doesn't start with a decimal point.
+      if (!startsWithDecimalPoint && src[cursor] === ".") {
+        value += src[cursor];
+        while (isDigit(src[++cursor])) {
+          value += src[cursor];
+        }
+      }
+
+      // Exponent part
+      if (src[cursor] === "e" || src[cursor] === "E") {
+        cursor++;
+        let exponentSign = "";
+        if (isSign(src[cursor])) {
+          exponentSign = src[cursor];
+          cursor++;
+        }
+        if (isDigit(src[cursor])) {
+          value += "e" + exponentSign + src[cursor];
+          while (isDigit(src[++cursor])) {
+            value += src[cursor];
+          }
+        } // If the "e" isn't directly followed by an int (signed or unsigned),
+        // then there is not exponent part. The "e" might just be
+        // the first character of some symbol.
+        else {
+          if (exponentSign) cursor -= 2;
+          else cursor--;
+        }
+      }
+
       tokens.push({ type: TokenType.NUMBER, value: +value });
       continue;
     } // A sign not succeeded by a digit is not a number.
