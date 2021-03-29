@@ -5,7 +5,7 @@ const isDigit = (c: string) => /^[0-9]$/.test(c);
 const isLetter = (c: string) => /^[a-z]$/.test(c);
 const isEscape = (c: string) => c === "\\";
 const isSymbolChar = (c: string) => {
-  return isLetter(c) || /^[`~!@#$%^&*\-_=+[{\]}\\\|;:,<>\/\?]$/.test(c);
+  return isLetter(c) || /^[`~!@#$%^&*\-_=+[{\]}\\\|:,<>\/\?]$/.test(c);
 };
 const isEOL = (c: string) => /^[\r\n]$/.test(c);
 const isWhitespace = (c: string) => /^\s$/.test(c);

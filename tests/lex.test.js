@@ -129,6 +129,24 @@ Deno.test("should fail to tokenize quoted closing paren", () => {
   assertThrows(() => lex(input), SyntaxError, "quote");
 });
 
+// COMMENTS
+
+Deno.test("should tokenize a comment", () => {
+  const input = `a ; This is a comment
+  b`;
+  const result = [
+    { type: TokenType.SYMBOL, value: "a", quoted: false },
+    { type: TokenType.COMMENT, value: " This is a comment" },
+    { type: TokenType.SYMBOL, value: "b", quoted: false },
+  ];
+  assertEquals(lex(input), result);
+});
+
+Deno.test("should fail to tokenize quoted comment", () => {
+  const input = "'; ...";
+  assertThrows(() => lex(input), SyntaxError, "quote");
+});
+
 // WHITESPACE
 
 Deno.test("should ignore whitespace completely", () => {
@@ -150,91 +168,42 @@ Deno.test("should fail to tokenize unrecognized char", () => {
   assertThrows(() => lex(input), SyntaxError, "unrecognized");
 });
 
-// // Exercise 1 - Begin
-// Deno.test("should correctly tokenize a single digit", () => {
-//   const input = "2";
-//   const result = [{ type: "Number", value: 2 }];
+// MORE COMPLEX EXPRESSION
 
-//   expect(tokenize(input)).toEqual(result);
-// });
+Deno.test("should tokenize a fairly complex expression", () => {
+  const input = `; What follows is an s-expression.
+  (let ((x -1) (y 2.e3)) (+ x y (first '(3 'z "Hi"))))
+  `;
 
-// Deno.test("should be able to handle single numbers in expressions", () => {
-//   const input = "(1 2)";
+  const result = [
+    { type: TokenType.COMMENT, value: " What follows is an s-expression." },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "let", quoted: false },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "x", quoted: false },
+    { type: TokenType.NUMBER, value: -1 },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "y", quoted: false },
+    { type: TokenType.NUMBER, value: 2.e3 },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "+", quoted: false },
+    { type: TokenType.SYMBOL, value: "x", quoted: false },
+    { type: TokenType.SYMBOL, value: "y", quoted: false },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: false },
+    { type: TokenType.SYMBOL, value: "first", quoted: false },
+    { type: TokenType.OPENING_PARENTHESIS, quoted: true },
+    { type: TokenType.NUMBER, value: 3 },
+    { type: TokenType.SYMBOL, value: "z", quoted: true },
+    { type: TokenType.STRING, value: "Hi" },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.CLOSING_PARENTHESIS },
+    { type: TokenType.CLOSING_PARENTHESIS },
+  ];
 
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Number", value: 1 },
-//     { type: "Number", value: 2 },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
-
-// Deno.test("should be able to handle single letters in expressions", () => {
-//   const input = "(a b)";
-
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Name", value: "a" },
-//     { type: "Name", value: "b" },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
-// // Exercise 1: End
-
-// Deno.test("should be able to handle multiple-digit numbers", () => {
-//   const input = "(11 22)";
-
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Number", value: 11 },
-//     { type: "Number", value: 22 },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
-
-// // Exercise 2 Begin
-// Deno.test("should correctly tokenize a simple expression", () => {
-//   const input = "(add 2 3)";
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Name", value: "add" },
-//     { type: "Number", value: 2 },
-//     { type: "Number", value: 3 },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
-
-// Deno.test("should ignore whitespace", () => {
-//   const input = "   (add    2 3)";
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Name", value: "add" },
-//     { type: "Number", value: 2 },
-//     { type: "Number", value: 3 },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
-// // Exercise 2 End
-
-// Deno.test("should know about strings", () => {
-//   const input = '(log "hello" "world")';
-//   const result = [
-//     { type: "Parenthesis", value: "(" },
-//     { type: "Name", value: "log" },
-//     { type: "String", value: "hello" },
-//     { type: "String", value: "world" },
-//     { type: "Parenthesis", value: ")" },
-//   ];
-
-//   expect(tokenize(input)).toEqual(result);
-// });
+  assertEquals(lex(input), result);
+});

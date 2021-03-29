@@ -61,7 +61,7 @@ letter = %x41-5A / %x61-7A ; A-Z / a-z
 symbol-punct =
   "`" / "~" / "!" / "@" / "#" / "$" / "%" / "^" / "&" / "*"
   / "-" / "_" / "=" / "+" / "[" / "{" / "]" / "}" / "\" / "|"
-  / ";" / ":" / "," / "<" / ">" / "/" / "?"
+  / ":" / "," / "<" / ">" / "/" / "?"
 
 ; String: anything enclosed in double quotes
 ; Largely from the TOML grammar
