@@ -112,3 +112,8 @@ Deno.test("should parse tokens for a nested list", () => {
   };
   assertEquals(parse(tokens), ast);
 });
+
+Deno.test("should fail to parse an unrecognized token", () => {
+  const tokens = [{ type: NodeType.NUMBER, value: 4 }, { type: "." }];
+  assertThrows(() => parse(tokens), SyntaxError, "unrecognized");
+});

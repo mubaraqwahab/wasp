@@ -1,13 +1,17 @@
 import { Node, NodeType, Token, TokenType } from "./types.ts";
 
+const s = JSON.stringify;
+
 function parse(tokens: Token[]): Node {
   return { type: NodeType.PROGRAM, children: parseAux(tokens) };
 }
 
-function parseAux(tokens: Token[], list = false): Node[] {
+function parseAux(tokens: Token[], inList = false): Node[] {
   if (!tokens.length) {
     // End of file while in list
-    if (list) throw new SyntaxError();
+    if (inList) {
+      throw new SyntaxError(`expected a closing parenthesis but found eof`);
+    }
     return [];
   }
 
@@ -37,16 +41,17 @@ function parseAux(tokens: Token[], list = false): Node[] {
       break;
     case TokenType.CLOSING_PARENTHESIS:
       // error if no opening paren
-      if (!list) {
-        throw new SyntaxError();
+      if (!inList) {
+        throw new SyntaxError(`unexpected closing parenthesis found.`);
       }
       return result;
-    default:
-      // TODO: what should happen? error?
+    case TokenType.COMMENT:
       break;
+    default:
+      throw new SyntaxError(`unrecognized token of type ${s(token.type)}`);
   }
 
-  result.push(...parseAux(tokens, list));
+  result.push(...parseAux(tokens, inList));
   return result;
 }
 
