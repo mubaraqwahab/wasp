@@ -20,10 +20,13 @@ The course used Lisp because it has a very simple syntax, unlike most other lang
 
 ## Progress
 
-* Still primarily learning from the course.
-* I've specified Wasp syntax is in [/wasp.abnf](./wasp.abnf) in [ABNF](https://tools.ietf.org/html/rfc5234) notation.
-* Lexing in progress.
-* Semantics and special forms are yet to be defined.
+* Syntax specification ✅ (See [/wasp.abnf](./wasp.abnf))
+* Lexer ✅
+* Parser ✅
+* Basic semantics ✅
+* Special forms in progress. 🔄
+* Interpreter
+* Docs
 
 ## Setup
 
