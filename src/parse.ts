@@ -48,7 +48,7 @@ function parseAux(tokens: Token[], inList = false): Node[] {
     case TokenType.COMMENT:
       break;
     default:
-      throw new SyntaxError(`unrecognized token of type ${s(token.type)}`);
+      throw new SyntaxError(`unrecognized token ${s(token)}`);
   }
 
   result.push(...parseAux(tokens, inList));

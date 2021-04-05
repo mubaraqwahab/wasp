@@ -1,0 +1,58 @@
+/*
+I need:
+* variables
+* boolean
+* conditionals
+* loops
+* function defs
+* print
+* others
+
+No redefining special forms!
+
+Variables:
+* (let ((name value) ...) form1 ... formN) -> formN
+
+Boolean:
+* T and NIL
+
+Conditionals:
+* (if form1 ifForm elseForm) -> ifForm if form1 isn't NIL, elseForm otherwise
+
+Loops:
+*
+
+Function def:
+* (defun name (arg ...) form ...) -> name
+
+Print:
+* (print form ...) -> NIL
+
+Arithmetic:
+* (+ num num1 ...)
+* (- num num1 ...)
+* (* num num1 ...)
+* (/ num num1 ...) (others must not be zero)
+* (** num num1 ...)
+
+Relational
+* (< num num1 ...) (are they sorted in strictly ascending order)
+* (<= num num1 ...) (are they sorted in ascending order)
+* (> num num1 ...) (are they sorted in strictly descending order)
+* (>= num num1 ...) (are they sorted in descending order)
+* (= form form1 ...) (are they equal in value)
+* (max num ...)
+* (min num ...)
+
+Logical
+* (or form form1 ...)
+* (and form form1 ...)
+
+Lists:
+* (first form)
+* (rest form)
+* (cons first rest)
+* (list form ...)
+* (last form)
+* (nth form)
+*/
