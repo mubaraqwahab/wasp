@@ -1,9 +1,9 @@
 import { defaultEnv, isSpecialForm } from "./environment.ts";
-import { Environment, Node, NodeType } from "./types.ts";
+import { Environment, List, Node, NodeType, UAtom } from "./types.ts";
 
 const s = JSON.stringify;
 
-function evaluate(node: Node, inQuotedList = false): unknown {
+function evaluate(node: Node, inQuotedList = false): UAtom | List<UAtom> {
   const env = { ...defaultEnv };
   switch (node.type) {
     case NodeType.NUMBER:
@@ -50,8 +50,8 @@ function evaluate(node: Node, inQuotedList = false): unknown {
   }
 }
 
-function evalSpecialForm(node: Node, env: Environment): unknown {
-  // TODO
+function evalSpecialForm(node: Node, env: Environment): UAtom | List<UAtom> {
+  // TODO (remove undefined from signature?)
   return undefined;
 }
 

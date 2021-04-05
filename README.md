@@ -6,7 +6,7 @@ This is based on a [Frontend Masters](https://frontendmasters.com/) course, [_Bu
 
 ## Motivation
 
-I was immersed in frontend (web) development to a good extent some months ago, and I noticed something common to _a lot_ of the field's toolchain &ndash; they were effectively compilers.
+I noticed something common to _many_ of the tools used in frontend (web) development &ndash; they were effectively compilers.
 
 Many frontend web projects are written in languages (or at least, syntaxes) other than the languages of the web (i.e. HTML, CSS and JavaScript). For example, you'll find web projects developed with technologies like [React](https://reactjs.org/), [Sass](https://sass-lang.com/), [Markdown](https://guides.github.com/features/mastering-markdown/), [TypeScript](https://www.typescriptlang.org/), [Nunjucks](https://mozilla.github.io/nunjucks/), etc. as opposed to pure HTML, CSS, and JavaScript. Of course, browsers don't understand these languages as is, so they have to be translated into languages that browsers understand. This is where compilers come in.
 

@@ -55,4 +55,11 @@ Lists:
 * (list form ...)
 * (last form)
 * (nth form)
+
+Predicates:
+* (atomp form)
+* (numberp form)
+* (stringp form)
+* (symbolp form)
+* (listp form)
 */
