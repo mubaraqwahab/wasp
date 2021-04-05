@@ -5,20 +5,27 @@ import {
   assertThrows,
 } from "https://deno.land/std@0.90.0/testing/asserts.ts";
 
-Deno.test("should fall back to returning a primitive numeric value", () => {
-  const ast = {
-    type: NodeType.PROGRAM,
-    children: [{ type: NodeType.NUMBER, value: 2 }],
-  };
+Deno.test("can evaluate a number", () => {
+  const ast = { type: NodeType.NUMBER, value: 2 };
   assertEquals(evaluate(ast), 2);
 });
 
-Deno.test("should fall back to returning a primitive string value", () => {
+Deno.test("can evaluate a string", () => {
   const ast = { type: NodeType.STRING, value: "Hello" };
   assertEquals(evaluate(ast), "Hello");
 });
 
-Deno.test("should be able to evaluate a single expression", () => {
+Deno.test("can evaluate a symbol", () => {
+  const ast = { type: NodeType.SYMBOL, value: "pi", quoted: false };
+  assertEquals(evaluate(ast), Math.PI);
+});
+
+Deno.test("can evaluate a quoted symbol", () => {
+  const ast = { type: NodeType.SYMBOL, value: "abc", quoted: true };
+  assertEquals(evaluate(ast), Symbol.for("abc"));
+});
+
+Deno.test("can evaluate a list", () => {
   const ast = {
     type: NodeType.PROGRAM,
     children: [{
@@ -34,7 +41,7 @@ Deno.test("should be able to evaluate a single expression", () => {
   assertEquals(evaluate(ast), 5);
 });
 
-Deno.test("should be able to evaluate a nested expression", () => {
+Deno.test("can evaluate a nested list", () => {
   const ast = {
     type: NodeType.LIST,
     quoted: false,
@@ -56,12 +63,7 @@ Deno.test("should be able to evaluate a nested expression", () => {
   assertEquals(evaluate(ast), 4);
 });
 
-Deno.test("should be able to lookup identifiers in the environment", () => {
-  const ast = { type: NodeType.SYMBOL, name: "pi", quoted: false };
-  assertEquals(evaluate(ast), Math.PI);
-});
-
-Deno.test("should be able to highest number in a range", () => {
+Deno.test("can evaluate a quoted list", () => {
   const ast = {
     type: NodeType.LIST,
     quoted: true,
@@ -72,4 +74,20 @@ Deno.test("should be able to highest number in a range", () => {
     ],
   };
   assertEquals(evaluate(ast), [2.0, -3, 10e-9]);
+});
+
+Deno.test("can ignore an comment", () => {
+  const ast = {
+    type: NodeType.COMMENT,
+    value: "hey there!",
+  };
+  assertEquals(evaluate(ast), undefined);
+});
+
+Deno.test("can evaluate an empty program", () => {
+  const ast = {
+    type: NodeType.PROGRAM,
+    children: [],
+  };
+  assertEquals(evaluate(ast), undefined);
 });

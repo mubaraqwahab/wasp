@@ -54,4 +54,4 @@ const defaultEnv: Environment = {
   },
 };
 
-export { defaultEnv };
+export { defaultEnv, isSpecialForm };
