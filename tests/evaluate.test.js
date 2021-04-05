@@ -91,3 +91,28 @@ Deno.test("can evaluate an empty program", () => {
   };
   assertEquals(evaluate(ast), undefined);
 });
+
+Deno.test("can evaluate type", () => {
+  // (type '(type 'qwe))
+  const ast = {
+    type: NodeType.PROGRAM,
+    children: [
+      {
+        type: NodeType.LIST,
+        quoted: false,
+        children: [
+          { type: NodeType.SYMBOL, value: "type", quoted: false },
+          {
+            type: NodeType.LIST,
+            quoted: true,
+            children: [
+              { type: NodeType.SYMBOL, value: "type", quoted: false },
+              { type: NodeType.SYMBOL, value: "qwe", quoted: true },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  assertEquals(evaluate(ast), "list");
+});

@@ -3,14 +3,14 @@ import { Environment, Node, NodeType } from "./types.ts";
 
 const s = JSON.stringify;
 
-function evaluate(node: Node): unknown {
-  const env = { ...defaultEnv, ...{} };
+function evaluate(node: Node, inQuotedList = false): unknown {
+  const env = { ...defaultEnv };
   switch (node.type) {
     case NodeType.NUMBER:
     case NodeType.STRING:
       return node.value;
     case NodeType.SYMBOL:
-      if (node.quoted) {
+      if (node.quoted || inQuotedList) {
         return Symbol.for(node.value);
       } else if (node.value in env.symbols) {
         return env.symbols[node.value];
@@ -19,7 +19,7 @@ function evaluate(node: Node): unknown {
       }
     case NodeType.LIST:
       if (node.quoted) {
-        return node.children.map(evaluate);
+        return node.children.map((n) => evaluate(n, true));
       } else {
         const firstNode = node.children[0];
         if (firstNode.type === NodeType.SYMBOL) {
@@ -27,11 +27,13 @@ function evaluate(node: Node): unknown {
             // must not be quoted
             throw new TypeError();
           } else if (isSpecialForm(firstNode.value)) {
-            return evalSpecialForm(node);
+            return evalSpecialForm(node, env);
           } else {
             const fn = firstNode.value;
             const args = node.children.slice(1);
-            return env.functions[fn](...args.map(evaluate));
+            return env.functions[fn](
+              ...args.map((n) => evaluate(n, inQuotedList)),
+            );
           }
         } else {
           // expected symbol
@@ -41,14 +43,15 @@ function evaluate(node: Node): unknown {
     case NodeType.COMMENT:
       return undefined;
     case NodeType.PROGRAM:
-      return node.children.map(evaluate).pop();
+      return node.children.map((n) => evaluate(n)).pop();
     default:
       // unknown node type
       throw new SyntaxError();
   }
 }
 
-function evalSpecialForm(node: Node): unknown {
+function evalSpecialForm(node: Node, env: Environment): unknown {
+  // TODO
   return undefined;
 }
 

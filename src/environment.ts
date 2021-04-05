@@ -17,6 +17,9 @@ function allWithPredicate<T>(pred: (a: T, b: T) => boolean) {
   };
 }
 
+type Atom = number | string | symbol;
+type AtomOrList = Atom | Atom[];
+
 const defaultEnv: Environment = {
   functions: {
     "+": all((a: number, b: number) => a + b),
@@ -34,20 +37,21 @@ const defaultEnv: Environment = {
     "=": allWithPredicate((a: unknown, b: unknown) => a === b),
     "!=": allWithPredicate((a: number, b: number) => a !== b),
 
-    not: (x: unknown) => !x,
-    or: all((a: unknown, b: unknown) => a || b),
-    and: all((a: unknown, b: unknown) => a && b),
+    not: (x: AtomOrList) => !x,
+    or: all((a: AtomOrList, b: AtomOrList) => a || b),
+    and: all((a: AtomOrList, b: AtomOrList) => a && b),
 
     max: Math.max,
     min: Math.min,
     print: console.log,
+    type: (val: AtomOrList) => Array.isArray(val) ? "list" : typeof val,
 
-    first: (a: unknown, ..._: unknown[]) => a,
-    last: (...list: unknown[]) => list[list.length - 1],
-    nth: (n: number, ...list: unknown[]) => list[n],
-    rest: (_: unknown, ...others: unknown[]) => others,
-    cons: (first: unknown, ...rest: unknown[]) => [first, ...rest],
-    list: (...elements: unknown[]) => elements,
+    first: (a: AtomOrList, ..._: AtomOrList[]) => a,
+    last: (...list: AtomOrList[]) => list[list.length - 1],
+    nth: (n: number, ...list: AtomOrList[]) => list[n],
+    rest: (_: AtomOrList, ...others: AtomOrList[]) => others,
+    cons: (first: AtomOrList, ...rest: AtomOrList[]) => [first, ...rest],
+    list: (...elements: AtomOrList[]) => elements,
   },
   symbols: {
     pi: Math.PI,
