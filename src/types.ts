@@ -1,4 +1,12 @@
-export type { Atom, AtomOrList, Environment, List, Node, Token, UAtom };
+export type {
+  Atom,
+  Environment,
+  Node,
+  SExpression,
+  Token,
+  UAtom,
+  USExpression,
+};
 export { NodeType, TokenType };
 
 enum TokenType {
@@ -99,15 +107,15 @@ type Node =
 
 type Atom = number | string | symbol;
 type UAtom = Atom | undefined;
-type List<T> = (T | List<T>)[];
-type AtomOrList = Atom | List<Atom>;
+type SExpression = Atom | SExpression[];
+type USExpression = UAtom | USExpression[];
 
 interface Environment {
   functions: {
     // deno-lint-ignore ban-types
     [key: string]: Function;
   };
-  symbols: {
-    [key: string]: Atom | List<Atom>;
+  variables: {
+    [key: string]: SExpression;
   };
 }

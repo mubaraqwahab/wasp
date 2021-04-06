@@ -1,9 +1,9 @@
 import { defaultEnv, isSpecialForm } from "./environment.ts";
-import { Environment, List, Node, NodeType, UAtom } from "./types.ts";
+import { Environment, Node, NodeType, UAtom, USExpression } from "./types.ts";
 
 const s = JSON.stringify;
 
-function evaluate(node: Node, inQuotedList = false): UAtom | List<UAtom> {
+function evaluate(node: Node, inQuotedList = false): USExpression {
   const env = { ...defaultEnv };
   switch (node.type) {
     case NodeType.NUMBER:
@@ -12,8 +12,8 @@ function evaluate(node: Node, inQuotedList = false): UAtom | List<UAtom> {
     case NodeType.SYMBOL:
       if (node.quoted || inQuotedList) {
         return Symbol.for(node.value);
-      } else if (node.value in env.symbols) {
-        return env.symbols[node.value];
+      } else if (node.value in env.variables) {
+        return env.variables[node.value];
       } else {
         throw new ReferenceError(`${s(node.value)} is not defined`);
       }
@@ -50,7 +50,7 @@ function evaluate(node: Node, inQuotedList = false): UAtom | List<UAtom> {
   }
 }
 
-function evalSpecialForm(node: Node, env: Environment): UAtom | List<UAtom> {
+function evalSpecialForm(node: Node, env: Environment): USExpression {
   // TODO (remove undefined from signature?)
   return undefined;
 }
