@@ -1,32 +1,33 @@
 import { evaluate } from "../src/evaluate.ts";
-import { NodeType } from "../src/types.ts";
+import { Node, NodeType } from "../src/types.ts";
 import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.90.0/testing/asserts.ts";
 
 Deno.test("can evaluate a number", () => {
-  const ast = { type: NodeType.NUMBER, value: 2 };
+  const ast: Node = { type: NodeType.NUMBER, value: 2 };
   assertEquals(evaluate(ast), 2);
 });
 
 Deno.test("can evaluate a string", () => {
-  const ast = { type: NodeType.STRING, value: "Hello" };
+  const ast: Node = { type: NodeType.STRING, value: "Hello" };
   assertEquals(evaluate(ast), "Hello");
 });
 
 Deno.test("can evaluate a symbol", () => {
-  const ast = { type: NodeType.SYMBOL, value: "pi", quoted: false };
+  const ast: Node = { type: NodeType.SYMBOL, value: "pi", quoted: false };
   assertEquals(evaluate(ast), Math.PI);
 });
 
 Deno.test("can evaluate a quoted symbol", () => {
-  const ast = { type: NodeType.SYMBOL, value: "abc", quoted: true };
+  const ast: Node = { type: NodeType.SYMBOL, value: "abc", quoted: true };
   assertEquals(evaluate(ast), Symbol.for("abc"));
 });
 
 Deno.test("can evaluate a list", () => {
-  const ast = {
+  // (+ 2 3)
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [{
       type: NodeType.LIST,
@@ -42,7 +43,8 @@ Deno.test("can evaluate a list", () => {
 });
 
 Deno.test("can evaluate a nested list", () => {
-  const ast = {
+  // (+ 2 3 (- 4 5))
+  const ast: Node = {
     type: NodeType.LIST,
     quoted: false,
     children: [
@@ -64,7 +66,8 @@ Deno.test("can evaluate a nested list", () => {
 });
 
 Deno.test("can evaluate a quoted list", () => {
-  const ast = {
+  // '(2.0 -3 10e-9)
+  const ast: Node = {
     type: NodeType.LIST,
     quoted: true,
     children: [
@@ -77,7 +80,7 @@ Deno.test("can evaluate a quoted list", () => {
 });
 
 Deno.test("can ignore an comment", () => {
-  const ast = {
+  const ast: Node = {
     type: NodeType.COMMENT,
     value: "hey there!",
   };
@@ -85,7 +88,7 @@ Deno.test("can ignore an comment", () => {
 });
 
 Deno.test("can evaluate an empty program", () => {
-  const ast = {
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [],
   };
@@ -94,7 +97,7 @@ Deno.test("can evaluate an empty program", () => {
 
 Deno.test("can evaluate type", () => {
   // (type '(type 'qwe))
-  const ast = {
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [
       {
