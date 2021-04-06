@@ -1,15 +1,11 @@
-import { Atom, Environment, SExpression } from "./types.ts";
-
-function isSpecialForm(name: string) {
-  return name in new Set<string>(["let", "if", "defun"]);
-}
+import { Environment, SExpression } from "./types.ts";
 
 function all<T>(fn: (a: T, b: T) => T) {
   return (first: T, ...rest: T[]) => rest.reduce(fn, first);
 }
 
 function allWithPredicate<T>(pred: (a: T, b: T) => boolean) {
-  return (list: T[]) => {
+  return (...list: T[]) => {
     for (let i = 0; i < list.length - 1; i++) {
       if (!pred(list[i], list[i + 1])) return false;
     }
@@ -55,4 +51,4 @@ const defaultEnv: Environment = {
   },
 };
 
-export { defaultEnv, isSpecialForm };
+export { defaultEnv };

@@ -64,9 +64,11 @@ Deno.test("should parse tokens for a simple list", () => {
 });
 
 Deno.test("should parse tokens for a nested list", () => {
-  // (+ 2 3
-  //   (first (7.8 3.e9)) ; expect to be 7.8
-  //   4)
+  /*
+    (+ 2 3
+      (first (7.8 3.e9)) ; expect to be 7.8
+    4)
+  */
   const tokens: Token[] = [
     { type: TokenType.OPENING_PARENTHESIS, quoted: false },
     { type: TokenType.SYMBOL, value: "+", quoted: false },

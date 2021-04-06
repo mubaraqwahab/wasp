@@ -26,7 +26,7 @@ Deno.test("can evaluate a quoted symbol", () => {
 });
 
 Deno.test("can evaluate a list", () => {
-  // (+ 2 3)
+  /* (+ 2 3) */
   const ast: Node = {
     type: NodeType.PROGRAM,
     children: [{
@@ -43,7 +43,7 @@ Deno.test("can evaluate a list", () => {
 });
 
 Deno.test("can evaluate a nested list", () => {
-  // (+ 2 3 (- 4 5))
+  /* (+ 2 3 (- 4 5)) */
   const ast: Node = {
     type: NodeType.LIST,
     quoted: false,
@@ -66,7 +66,7 @@ Deno.test("can evaluate a nested list", () => {
 });
 
 Deno.test("can evaluate a quoted list", () => {
-  // '(2.0 -3 10e-9)
+  /* '(2.0 -3 10e-9) */
   const ast: Node = {
     type: NodeType.LIST,
     quoted: true,
@@ -96,7 +96,7 @@ Deno.test("can evaluate an empty program", () => {
 });
 
 Deno.test("can evaluate type", () => {
-  // (type '(type 'qwe))
+  /* (type '(type 'qwe)) */
   const ast: Node = {
     type: NodeType.PROGRAM,
     children: [
@@ -118,4 +118,55 @@ Deno.test("can evaluate type", () => {
     ],
   };
   assertEquals(evaluate(ast), "list");
+});
+
+Deno.test("can evaluate if special form", () => {
+  /*
+    (if (> 5 8)
+        "5 is greater than 8"
+      (if (< 5 8)
+          "5 is less than 8"
+        ("5 is equal to 8")))
+  */
+  const ast: Node = {
+    type: NodeType.PROGRAM,
+    children: [
+      {
+        type: NodeType.LIST,
+        quoted: false,
+        children: [
+          { type: NodeType.SYMBOL, value: "if", quoted: false },
+          {
+            type: NodeType.LIST,
+            quoted: false,
+            children: [
+              { type: NodeType.SYMBOL, value: ">", quoted: false },
+              { type: NodeType.NUMBER, value: 5 },
+              { type: NodeType.NUMBER, value: 8 },
+            ],
+          },
+          { type: NodeType.STRING, value: "5 is greater than 8" },
+          {
+            type: NodeType.LIST,
+            quoted: false,
+            children: [
+              { type: NodeType.SYMBOL, value: "if", quoted: false },
+              {
+                type: NodeType.LIST,
+                quoted: false,
+                children: [
+                  { type: NodeType.SYMBOL, value: "=", quoted: false },
+                  { type: NodeType.NUMBER, value: 5 },
+                  { type: NodeType.NUMBER, value: 8 },
+                ],
+              },
+              { type: NodeType.STRING, value: "5 is equal to 8" },
+              { type: NodeType.STRING, value: "5 is less than 8" },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  assertEquals(evaluate(ast), "5 is less than 8");
 });

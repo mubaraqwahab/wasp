@@ -105,7 +105,7 @@ type Node =
   | CommentNode
   | ProgramNode;
 
-type Atom = number | string | symbol;
+type Atom = number | string | symbol | boolean;
 type UAtom = Atom | undefined;
 type SExpression = Atom | SExpression[];
 type USExpression = UAtom | USExpression[];
