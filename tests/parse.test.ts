@@ -1,13 +1,13 @@
 import { parse } from "../src/parse.ts";
-import { NodeType, TokenType } from "../src/types.ts";
+import { Node, NodeType, Token, TokenType } from "../src/types.ts";
 import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.90.0/testing/asserts.ts";
 
 Deno.test("should parse a number token", () => {
-  const tokens = [{ type: TokenType.NUMBER, value: 2 }];
-  const ast = {
+  const tokens: Token[] = [{ type: TokenType.NUMBER, value: 2 }];
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [{ type: NodeType.NUMBER, value: 2 }],
   };
@@ -15,11 +15,11 @@ Deno.test("should parse a number token", () => {
 });
 
 Deno.test("should parse symbol tokens", () => {
-  const tokens = [
+  const tokens: Token[] = [
     { type: TokenType.SYMBOL, value: "a", quoted: false },
     { type: TokenType.SYMBOL, value: "b", quoted: true },
   ];
-  const ast = {
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [
       { type: NodeType.SYMBOL, value: "a", quoted: false },
@@ -30,8 +30,8 @@ Deno.test("should parse symbol tokens", () => {
 });
 
 Deno.test("should parse a string token", () => {
-  const tokens = [{ type: TokenType.STRING, value: "hello" }];
-  const ast = {
+  const tokens: Token[] = [{ type: TokenType.STRING, value: "hello" }];
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [{ type: NodeType.STRING, value: "hello" }],
   };
@@ -39,14 +39,14 @@ Deno.test("should parse a string token", () => {
 });
 
 Deno.test("should parse tokens for a simple list", () => {
-  const tokens = [
+  const tokens: Token[] = [
     { type: TokenType.OPENING_PARENTHESIS, quoted: false },
     { type: TokenType.SYMBOL, value: "+", quoted: false },
     { type: TokenType.NUMBER, value: 2 },
     { type: TokenType.NUMBER, value: 3 },
     { type: TokenType.CLOSING_PARENTHESIS },
   ];
-  const ast = {
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [
       {
@@ -64,7 +64,7 @@ Deno.test("should parse tokens for a simple list", () => {
 });
 
 Deno.test("should parse tokens for a nested list", () => {
-  const tokens = [
+  const tokens: Token[] = [
     { type: TokenType.OPENING_PARENTHESIS, quoted: false },
     { type: TokenType.SYMBOL, value: "+", quoted: false },
     { type: TokenType.NUMBER, value: 2 },
@@ -80,7 +80,7 @@ Deno.test("should parse tokens for a nested list", () => {
     { type: TokenType.NUMBER, value: 4 },
     { type: TokenType.CLOSING_PARENTHESIS },
   ];
-  const ast = {
+  const ast: Node = {
     type: NodeType.PROGRAM,
     children: [
       {
@@ -114,6 +114,9 @@ Deno.test("should parse tokens for a nested list", () => {
 });
 
 Deno.test("should fail to parse an unrecognized token", () => {
-  const tokens = [{ type: NodeType.NUMBER, value: 4 }, { type: "." }];
-  assertThrows(() => parse(tokens), SyntaxError, "unrecognized");
+  const tokens = [
+    { type: TokenType.NUMBER, value: 4 },
+    { type: "." },
+  ];
+  assertThrows(() => parse(tokens as Token[]), SyntaxError, "unrecognized");
 });

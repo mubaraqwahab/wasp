@@ -3,10 +3,10 @@ import { Node, NodeType, Token, TokenType } from "./types.ts";
 const s = JSON.stringify;
 
 function parse(tokens: Token[]): Node {
-  return { type: NodeType.PROGRAM, children: parseAux(tokens) };
+  return { type: NodeType.PROGRAM, children: parseHelper(tokens) };
 }
 
-function parseAux(tokens: Token[], inList = false): Node[] {
+function parseHelper(tokens: Token[], inList = false): Node[] {
   if (!tokens.length) {
     // End of file while in list
     if (inList) {
@@ -36,7 +36,7 @@ function parseAux(tokens: Token[], inList = false): Node[] {
       result.push({
         type: NodeType.LIST,
         quoted: token.quoted,
-        children: [...parseAux(tokens, true)],
+        children: [...parseHelper(tokens, true)],
       });
       break;
     case TokenType.CLOSING_PARENTHESIS:
@@ -51,7 +51,7 @@ function parseAux(tokens: Token[], inList = false): Node[] {
       throw new SyntaxError(`unrecognized token ${s(token)}`);
   }
 
-  result.push(...parseAux(tokens, inList));
+  result.push(...parseHelper(tokens, inList));
   return result;
 }
 
