@@ -1,5 +1,5 @@
 import { lex } from "../src/lex.ts";
-import { TokenType } from "../src/types.ts";
+import { Token, TokenType } from "../src/types.ts";
 import {
   assertEquals,
   assertThrows,
@@ -13,13 +13,13 @@ Deno.test("should return an array", () => {
 
 Deno.test("should tokenize an unsigned int", () => {
   const input = `123`;
-  const result = [{ type: TokenType.NUMBER, value: 123 }];
+  const result: Token[] = [{ type: TokenType.NUMBER, value: 123 }];
   assertEquals(lex(input), result);
 });
 
 Deno.test("should tokenize signed ints", () => {
   const input = `+123 -456`;
-  const result = [
+  const result: Token[] = [
     { type: TokenType.NUMBER, value: 123 },
     { type: TokenType.NUMBER, value: -456 },
   ];
@@ -28,7 +28,7 @@ Deno.test("should tokenize signed ints", () => {
 
 Deno.test("should tokenize floats", () => {
   const input = `.12 -34. +5.6 .7e2 -8.E3 17e8 +90.1E+4 2.45e-67`;
-  const result = [
+  const result: Token[] = [
     { type: TokenType.NUMBER, value: 0.12 },
     { type: TokenType.NUMBER, value: -34.0 },
     { type: TokenType.NUMBER, value: 5.6 },
@@ -43,7 +43,7 @@ Deno.test("should tokenize floats", () => {
 
 Deno.test("shouldn't give false positives when tokenizing floats", () => {
   const input = `4.5en 6e+-`;
-  const result = [
+  const result: Token[] = [
     { type: TokenType.NUMBER, value: 4.5 },
     { type: TokenType.SYMBOL, value: "en", quoted: false },
     { type: TokenType.NUMBER, value: 6 },
@@ -65,13 +65,17 @@ Deno.test("should fail to tokenize a lone full-stop", () => {
 
 Deno.test("should tokenize a symbol", () => {
   const input = `+a1 `;
-  const result = [{ type: TokenType.SYMBOL, value: "+a1", quoted: false }];
+  const result: Token[] = [
+    { type: TokenType.SYMBOL, value: "+a1", quoted: false },
+  ];
   assertEquals(lex(input), result);
 });
 
 Deno.test("should tokenize a quoted symbol", () => {
   const input = `'ab-c`;
-  const result = [{ type: TokenType.SYMBOL, value: "ab-c", quoted: true }];
+  const result: Token[] = [
+    { type: TokenType.SYMBOL, value: "ab-c", quoted: true },
+  ];
   assertEquals(lex(input), result);
 });
 
@@ -79,19 +83,19 @@ Deno.test("should tokenize a quoted symbol", () => {
 
 Deno.test("should tokenize a string", () => {
   const input = `"Hello"`;
-  const result = [{ type: TokenType.STRING, value: "Hello" }];
+  const result: Token[] = [{ type: TokenType.STRING, value: "Hello" }];
   assertEquals(lex(input), result);
 });
 
 Deno.test("should tokenize a quoted string", () => {
   const input = `'"Hi there"`;
-  const result = [{ type: TokenType.STRING, value: "Hi there" }];
+  const result: Token[] = [{ type: TokenType.STRING, value: "Hi there" }];
   assertEquals(lex(input), result);
 });
 
 Deno.test("should tokenize an escaped string", () => {
   const input = `"Hel\\"lo\n"`;
-  const result = [
+  const result: Token[] = [
     { type: TokenType.STRING, value: `Hel\\"lo\n` },
   ];
 
@@ -102,7 +106,7 @@ Deno.test("should tokenize an escaped string", () => {
 
 Deno.test("should tokenize a list of symbols", () => {
   const input = "(+ a b)";
-  const result = [
+  const result: Token[] = [
     { type: TokenType.OPENING_PARENTHESIS, quoted: false },
     { type: TokenType.SYMBOL, value: "+", quoted: false },
     { type: TokenType.SYMBOL, value: "a", quoted: false },
@@ -114,7 +118,7 @@ Deno.test("should tokenize a list of symbols", () => {
 
 Deno.test("should tokenize a quoted list", () => {
   const input = "'(+ a b)";
-  const result = [
+  const result: Token[] = [
     { type: TokenType.OPENING_PARENTHESIS, quoted: true },
     { type: TokenType.SYMBOL, value: "+", quoted: false },
     { type: TokenType.SYMBOL, value: "a", quoted: false },
@@ -134,7 +138,7 @@ Deno.test("should fail to tokenize quoted closing paren", () => {
 Deno.test("should tokenize a comment", () => {
   const input = `a ; This is a comment
   b`;
-  const result = [
+  const result: Token[] = [
     { type: TokenType.SYMBOL, value: "a", quoted: false },
     { type: TokenType.COMMENT, value: " This is a comment" },
     { type: TokenType.SYMBOL, value: "b", quoted: false },
@@ -152,8 +156,7 @@ Deno.test("should fail to tokenize quoted comment", () => {
 Deno.test("should ignore whitespace completely", () => {
   const input = `
   \t`;
-  const result = [];
-  assertEquals(lex(input), result);
+  assertEquals(lex(input), []);
 });
 
 Deno.test("should fail to tokenize quoted whitespace", () => {
@@ -175,7 +178,7 @@ Deno.test("should tokenize a fairly complex expression", () => {
   (let ((x -1) (y 2.e3)) (+ x y (first '(3 'z "Hi"))))
   `;
 
-  const result = [
+  const result: Token[] = [
     { type: TokenType.COMMENT, value: " What follows is an s-expression." },
     { type: TokenType.OPENING_PARENTHESIS, quoted: false },
     { type: TokenType.SYMBOL, value: "let", quoted: false },
