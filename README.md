@@ -18,13 +18,13 @@ The course used Lisp because it has a very simple syntax, unlike most other lang
 * Lexer ✅
 * Parser ✅
 * Basic semantics ✅
-* Special forms in progress. 🔄
+* Special forms in progress 🔄
 * Interpreter
 * Docs
 
 ## Setup
 
-To use Wasp, you need to install [Deno](https://deno.land/). Deno is a JavaScript runtime from the creator of [Node](https://nodejs.org/). It's designed to be more standards-compliant, and it supports TypeScript out-of-the-box.
+To use Wasp, you need to install [Deno](https://deno.land/). Deno is a JavaScript runtime from the creator of [Node](https://nodejs.org/). It's designed to be more standards-compliant, and it supports [TypeScript](https://www.typescriptlang.org/) out-of-the-box.
 
 TODO: How to run
 
