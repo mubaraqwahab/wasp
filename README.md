@@ -19,6 +19,7 @@ The course used Lisp because it has a very simple syntax, unlike most other lang
 * Parser ✅
 * Basic semantics ✅
 * Special forms in progress 🔄
+* Type-safety, error handling 🔄
 * Interpreter
 * Docs
 
