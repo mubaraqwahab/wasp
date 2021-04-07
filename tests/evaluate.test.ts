@@ -126,7 +126,7 @@ Deno.test("can evaluate if special form", () => {
         "5 is greater than 8"
       (if (< 5 8)
           "5 is less than 8"
-        ("5 is equal to 8")))
+        "5 is equal to 8"))
   */
   const ast: Node = {
     type: NodeType.PROGRAM,

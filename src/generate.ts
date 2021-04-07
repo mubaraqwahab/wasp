@@ -3,6 +3,10 @@ import { Node, NodeType } from "./types.ts";
 const s = JSON.stringify;
 const specialForms = ["let", "if", "defun"];
 const infixOperators: { [key: string]: string } = {
+  "+": "+",
+  "-": "-",
+  "*": "*",
+  "/": "/",
   "<": "<",
   ">": ">",
   "=": "===",
@@ -30,13 +34,15 @@ function generate(node: Node): string {
           if (specialForms.includes(fn)) {
             return generateSpecialForm(fn, args);
           } else if (fn in infixOperators) {
-            return args.map(generate).join(infixOperators[fn]);
+            return `(${args.map(generate).join(infixOperators[fn])})`;
           } else {
             return `${fn}(${args.map(generate).join(",")})`;
           }
         }
       }
       break;
+    case NodeType.PROGRAM:
+      return node.children.map(generate).join(";");
     default:
       break;
   }
