@@ -51,7 +51,7 @@ sign = "+" / "-"
 ; * parentheses, quotes, periods, semicolons aren't allowed
 ; * can't be all numbers, can't start with number
 
-symbol = [ single-quote ] 1*( symbol-char [ digit ] )
+symbol = [ single-quote ] symbol-char *( symbol-char / digit )
 
 symbol-char = letter / symbol-punct
 

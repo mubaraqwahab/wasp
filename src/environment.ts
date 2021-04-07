@@ -1,22 +1,7 @@
 import { Environment, SExpression } from "./types.ts";
 
-function apply<T>(
-  fn: (a: T, b: T) => T,
-  type?: "number" | "string" | "symbol",
-) {
+function apply<T>(fn: (a: T, b: T) => T) {
   return function (...list: T[]) {
-    if (list.length < 2) throw new Error(); // expected at least one arg
-    if (type) {
-      let index;
-      const hasTypeError = list.some((e, i) => {
-        index = i;
-        return typeof e !== type;
-      });
-      if (hasTypeError) {
-        // you can do better with the error msg
-        throw new TypeError(`${index}th arg is not a ${type}`);
-      }
-    }
     return list.reduce(fn);
   };
 }
@@ -110,7 +95,7 @@ const defaultEnv: Environment = {
     or: apply((a: SExpression, b: SExpression) => a || b),
     and: apply((a: SExpression, b: SExpression) => a && b),
 
-    max: apply(Math.max, "number"),
+    max: Math.max,
     min: Math.min,
     print: console.log,
     type: (val: SExpression) => Array.isArray(val) ? "list" : typeof val,
