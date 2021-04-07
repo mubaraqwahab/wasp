@@ -9,8 +9,8 @@ I noticed something common to _many_ tools used in frontend (web) development &n
 ## Why Lisp?
 
 The course used Lisp because it has a very simple syntax, unlike most other languages:
-* Everything in Lisp is either an atom or a list;
-* Also, Lisp uses prefix notation so there's nothing to worry about operator precedence.
+* Everything in Lisp is an expression (i.e. no statements);
+* Lisp uses prefix notation so there's nothing to worry about operator precedence.
 
 ## Progress
 
