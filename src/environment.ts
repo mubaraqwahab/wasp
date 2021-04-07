@@ -1,10 +1,27 @@
 import { Environment, SExpression } from "./types.ts";
 
-function all<T>(fn: (a: T, b: T) => T) {
-  return (first: T, ...rest: T[]) => rest.reduce(fn, first);
+function apply<T>(
+  fn: (a: T, b: T) => T,
+  type?: "number" | "string" | "symbol",
+) {
+  return function (...list: T[]) {
+    if (list.length < 2) throw new Error(); // expected at least one arg
+    if (type) {
+      let index;
+      const hasTypeError = list.some((e, i) => {
+        index = i;
+        return typeof e !== type;
+      });
+      if (hasTypeError) {
+        // you can do better with the error msg
+        throw new TypeError(`${index}th arg is not a ${type}`);
+      }
+    }
+    return list.reduce(fn);
+  };
 }
 
-function allWithPredicate<T>(pred: (a: T, b: T) => boolean) {
+function applyPredicate<T>(pred: (a: T, b: T) => boolean) {
   return (...list: T[]) => {
     for (let i = 0; i < list.length - 1; i++) {
       if (!pred(list[i], list[i + 1])) return false;
@@ -13,28 +30,87 @@ function allWithPredicate<T>(pred: (a: T, b: T) => boolean) {
   };
 }
 
+function assertElementsType(array: unknown[], type: "number" | "string") {
+  array.forEach((e, i) => {
+    // deno-lint-ignore valid-typeof
+    if (typeof e !== type) {
+      throw new TypeError(
+        `${ordinalize(i + 1)} argument, ${array[i]}, is not a ${type}`,
+      );
+    }
+  });
+
+  function ordinalize(i: number): string {
+    if (i === 1) return "1st";
+    else if (i === 2) return "2nd";
+    else return `${i}th`;
+  }
+}
+
 const defaultEnv: Environment = {
   functions: {
-    "+": all((a: number, b: number) => a + b),
-    "-": all((a: number, b: number) => a - b),
-    "*": all((a: number, b: number) => a * b),
-    "/": all((a: number, b: number) => a / b),
-    "**": all((a: number, b: number) => a ** b),
-    "%": all((a: number, b: number) => a % b),
-    "//": all((a: number, b: number) => Math.floor(a / b)),
+    "+": (...numbers: number[]): number => {
+      assertElementsType(numbers, "number");
+      return numbers.reduce((res, n) => res + n, 0);
+    },
 
-    "<": allWithPredicate((a: number, b: number) => a < b),
-    "<=": allWithPredicate((a: number, b: number) => a <= b),
-    ">": allWithPredicate((a: number, b: number) => a > b),
-    ">=": allWithPredicate((a: number, b: number) => a >= b),
-    "=": allWithPredicate((a: unknown, b: unknown) => a === b),
-    "!=": allWithPredicate((a: number, b: number) => a !== b),
+    "-": (...numbers: number[]): number => {
+      if (!numbers.length) throw new Error(); // expected at least one arg
 
-    not: (x: SExpression) => !x,
-    or: all((a: SExpression, b: SExpression) => a || b),
-    and: all((a: SExpression, b: SExpression) => a && b),
+      assertElementsType(numbers, "number");
 
-    max: Math.max,
+      if (numbers.length === 1) return -numbers[0];
+      return numbers.reduce((res, n) => res - n);
+    },
+
+    "*": (...numbers: number[]): number => {
+      assertElementsType(numbers, "number");
+      return numbers.reduce((res, n) => res * n, 1);
+    },
+
+    "/": (...numbers: number[]): number => {
+      if (numbers.length < 2) throw new Error(); // expected at least two args
+
+      assertElementsType(numbers, "number");
+      return numbers.reduce((res, n) => {
+        if (n === 0) throw new Error(); // zero division error
+        return res / n;
+      });
+    },
+
+    "**": (...numbers: number[]): number => {
+      if (numbers.length < 2) throw new Error(); // expected at least two args
+
+      assertElementsType(numbers, "number");
+      return numbers.reduce((res, n) => res ** n);
+    },
+
+    "%": (...numbers: number[]): number => {
+      if (numbers.length < 2) throw new Error(); // expected at least two args
+
+      assertElementsType(numbers, "number");
+      return numbers.reduce((res, n) => res % n);
+    },
+
+    "//": (...numbers: number[]): number => {
+      if (numbers.length < 2) throw new Error(); // expected at least two args
+
+      assertElementsType(numbers, "number");
+      return numbers.reduce(Math.floor);
+    },
+
+    "<": applyPredicate<number>((a, b) => a < b),
+    "<=": applyPredicate<number>((a, b) => a <= b),
+    ">": applyPredicate<number>((a, b) => a > b),
+    ">=": applyPredicate<number>((a, b) => a >= b),
+    "=": applyPredicate((a, b) => a === b),
+    "!=": applyPredicate((a, b) => a !== b),
+
+    not: (x: SExpression) => !x, // is this good enough?
+    or: apply((a: SExpression, b: SExpression) => a || b),
+    and: apply((a: SExpression, b: SExpression) => a && b),
+
+    max: apply(Math.max, "number"),
     min: Math.min,
     print: console.log,
     type: (val: SExpression) => Array.isArray(val) ? "list" : typeof val,
