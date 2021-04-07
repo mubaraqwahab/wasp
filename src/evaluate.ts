@@ -19,6 +19,7 @@ function evaluate(node: Node, inQuotedList = false): USExpression {
         throw new ReferenceError(`${s(node.value)} is not defined`);
       }
     case NodeType.LIST:
+      // What if list is empty?
       if (node.quoted) {
         return node.children.map((n) => evaluate(n, true));
       } else {
