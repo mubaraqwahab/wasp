@@ -170,3 +170,5 @@ Deno.test("can evaluate if special form", () => {
   };
   assertEquals(evaluate(ast), "5 is less than 8");
 });
+
+// TODO: write tests for env fns
