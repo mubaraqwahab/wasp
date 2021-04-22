@@ -62,4 +62,10 @@ Predicates:
 * (stringp form)
 * (symbolp form)
 * (listp form)
+
+See https://web.mit.edu/scheme_v9.2/doc/mit-scheme-ref/Booleans.html for some tips
+* Use #t and #f for booleans
+* Everything should be true except #f
+* do atom? instead of atomp
+* do empty? (or not) for 0, #f, '(), ""
 */
