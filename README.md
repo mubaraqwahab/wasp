@@ -4,7 +4,7 @@ A little dialect of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_langu
 
 ## Motivation
 
-I noticed something common to _many_ tools used in frontend (web) development &ndash; they are effectively compilers. Many frontend web projects are written in languages (or at least, syntaxes) other than the languages of the web (i.e. HTML, CSS and JavaScript). For example, you'll find web projects developed with technologies like [React](https://reactjs.org/), [Sass](https://sass-lang.com/), [Nunjucks](https://mozilla.github.io/nunjucks/), etc. Of course, browsers don't understand these languages as is, so they have to be translated to languages that browsers understand. This is where compilers come in. As well, other tools used in the development process like [code formatters](https://prettier.io/), [linters](https://eslint.org/), [bundlers](https://rollupjs.org/guide/en/), and [minifiers](https://terser.org/) work in a way similar to compilers.
+I noticed something common to _many_ tools used in frontend (web) development &ndash; they are effectively compilers. Many frontend web projects are written in languages (or at least, syntaxes) other than those of the web (i.e. HTML, CSS and JavaScript). For example, you'll find web projects developed with technologies like [JSX (React)](https://reactjs.org/), [Sass](https://sass-lang.com/), [Nunjucks](https://mozilla.github.io/nunjucks/), etc. Of course, browsers don't understand these languages as is, so they have to be translated to languages that browsers understand. This is where compilers come in. As well, other tools used in the development process like [code formatters](https://prettier.io/), [linters](https://eslint.org/), [bundlers](https://rollupjs.org/guide/en/), and [minifiers](https://terser.org/) work in a way similar to compilers.
 
 ## Why Lisp?
 
@@ -14,15 +14,13 @@ The course used Lisp because it has a very simple syntax, unlike most other lang
 
 ## Progress
 
-* Syntax specification ✅ (See [/wasp.abnf](./wasp.abnf))
-* Lexer ✅
-* Parser ✅
-* Basic semantics ✅
-* Special forms in progress 🔄
-* Type-safety, error handling 🔄
-* Compiler 🔄
+* Language specification
+* Lexer
+* Parser
+* Type-safety, error handling
+* Code generator
 * Interpreter
-* Docs
+* Usage docs
 
 ## Setup
 
@@ -31,7 +29,3 @@ To use Wasp, you need to install [Deno](https://deno.land/). Deno is a JavaScrip
 TODO: How to run
 
 TODO: How to compile
-
-## Directory structure
-
-TODO

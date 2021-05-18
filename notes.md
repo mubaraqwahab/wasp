@@ -1,5 +1,7 @@
 # Notes
 
+_Notes I took from the Frontend Masters ["Building Your Own Programming Language"](https://frontendmasters.com/courses/programming-language) course_
+
 Compilation comprises three main stages: parsing, transformation, and generation. An intermediate representation of the source code is created through parsing, then transformations are applied to the representation before a string of code in a target language is generated.
 
 - [Lexing](#lexing)
