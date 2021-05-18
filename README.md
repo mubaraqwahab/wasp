@@ -1,6 +1,6 @@
 # Wasp 🐝
 
-A little dialect of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)) for my learning about compilers, built with [TypeScript](https://www.typescriptlang.org/) and [Deno](https://deno.land/). This is based on a [Frontend Masters](https://frontendmasters.com/) course, [_Building Your Own Programming Language_](https://frontendmasters.com/courses/programming-language). (See [course repo](https://github.com/stevekinney/dropbear).)
+A little dialect of Lisp for my learning about compilers, built with [Deno](https://deno.land/). This project is loosely based on a Frontend Masters course, [_Building Your Own Programming Language_](https://frontendmasters.com/courses/programming-language). (See [course repo](https://github.com/stevekinney/dropbear).)
 
 ## Motivation
 
